@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint *.js **/*.js src/**/*.js",
+    "lint": "eslint",
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
