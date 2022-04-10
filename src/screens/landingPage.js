@@ -14,7 +14,12 @@ import {
 export default function LandingPage() {
     const [state, setState] = useState({
         email: '',
-        password: ''
+        emailError: false,
+        password: '',
+        passwordError: false,
+        signedIn: false,
+        userNotFoundError: false,
+        wrongPasswordError: false
     });
 
     const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
@@ -22,17 +27,55 @@ export default function LandingPage() {
     function handleChange(e, name) {
         setState({
             ...state,
-            [name]: e
+            [name]: e,
+            emailError: false,
+            passwordError: false,
+            userNotFoundError: false,
+            wrongPasswordError: false
         });
     }
 
-    async function onSubmit() {
-        console.log('Starting sign in');
+    async function onSubmit(e) {
+        let emailError = false;
+        let passwordError = false;
+
+        e.preventDefault();
+        // Validate Email address
+        const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/i;
+        if (!emailRegex.test(state.email)) {
+            emailError = true;
+        }
+        if (state.password === '' || state.password.length < 6) {
+            passwordError = true;
+        }
+
+        setState({
+            ...state,
+            emailError,
+            passwordError,
+        });
+
+        if (emailError || passwordError) {
+            return;
+        }
+
         try {
             await signInWithEmailAndPassword(auth, state.email, state.password);
             console.log('sign in successful');
         } catch (error) {
-            console.log(error);
+            if (error.code === 'auth/user-not-found') {
+                setState({
+                    ...state,
+                    userNotFoundError: true,
+                });
+            } else if (error.code === 'auth/wrong-password') {
+                setState({
+                    ...state,
+                    wrongPasswordError: true,
+                });
+            } else {
+                console.log(error);
+            }
         }
     }
 
@@ -58,13 +101,25 @@ export default function LandingPage() {
                         onChangeText={(e) => handleChange(e, 'password')}
                     />
                 </View>
+                {state.emailError
+                    ? <Text>Please enter a valid email address.</Text>
+                    : null }
+                {state.passwordError
+                    ? <Text>Password must be at least 6 characters.</Text>
+                    : null }
+                {state.userNotFoundError
+                    ? <Text>There are no existing users with that email.</Text>
+                    : null }
+                {state.wrongPasswordError
+                    ? <Text>That is the incorrect password for that email.</Text>
+                    : null }
                 <View style={styles.signInButtonWrapper}>
                     <Button
                         style={styles.signInButton}
                         title='Sign In'
                         accessibilityLabel='Sign in button'
                         color={white}
-                        onPress={() => onSubmit()}
+                        onPress={(e) => onSubmit(e)}
                     />
                 </View>
                 <View style={styles.signUpWrapper}>
