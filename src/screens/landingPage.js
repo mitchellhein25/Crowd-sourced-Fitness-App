@@ -1,4 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+//The AsyncStorage warning is reference in App.js
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getReactNativePersistence } from 'firebase/auth/react-native';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app } from '../../firebase';
 import {
     StyleSheet, Text, TextInput, View, Button
 } from 'react-native';
@@ -7,6 +12,30 @@ import {
 } from '../../assets/globalStyles';
 
 export default function LandingPage() {
+    const [state, setState] = useState({
+        email: "",
+        password: ""
+    });
+
+    const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
+
+    function handleChange(e, name) {
+        setState({
+            ...state,
+            [name]: e
+        });
+	}
+
+    async function onSubmit(e) {
+        console.log('Starting sign in');
+        try {
+            await signInWithEmailAndPassword(auth, state.email, state.password);
+            console.log('sign in successful');
+        } catch (error) {
+            console.log(error);
+        }
+	}
+
     return (
         <View style={styles.inputFormContainer}>
             <View style={styles.headerWrapper}>
@@ -16,13 +45,17 @@ export default function LandingPage() {
                 <View style={styles.textInputWrapper}>
                     <TextInput
                         style={styles.textInput}
-                        placeholder="Username"
+                        placeholder="Email"
+                        value={state.email}
+                        onChangeText={e => handleChange(e, 'email')}
                     />
                 </View>
                 <View style={styles.textInputWrapper}>
                     <TextInput
                         style={styles.textInput}
                         placeholder="Password"
+                        value={state.password}
+                        onChangeText={e => handleChange(e, 'password')}
                     />
                 </View>
                 <View style={styles.signInButtonWrapper}>
@@ -31,6 +64,7 @@ export default function LandingPage() {
                         title="Sign In"
                         accessibilityLabel="Sign in button"
                         color={white}
+                        onPress={onSubmit}
                     />
                 </View>
                 <View style={styles.signUpWrapper}>

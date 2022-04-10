@@ -3,7 +3,10 @@
     "",
     "\\assets",
     "\\src",
-    "\\src\\screens"
+    "\\src\\screens",
+    "\\__tests__",
+    "\\__tests__\\screens"
   ],
+  "SelectedNode": "\\firebase.js",
   "PreviewInSolutionExplorer": false
 }
