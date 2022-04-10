@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-//The AsyncStorage warning is reference in App.js
+// The AsyncStorage warning is reference in App.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getReactNativePersistence } from 'firebase/auth/react-native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { app } from '../../firebase';
 import {
     StyleSheet, Text, TextInput, View, Button
 } from 'react-native';
+import app from '../../firebase';
 import {
     primaryColor, white, black
 } from '../../assets/globalStyles';
 
 export default function LandingPage() {
     const [state, setState] = useState({
-        email: "",
-        password: ""
+        email: '',
+        password: ''
     });
 
     const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
@@ -24,9 +24,9 @@ export default function LandingPage() {
             ...state,
             [name]: e
         });
-	}
+    }
 
-    async function onSubmit(e) {
+    async function onSubmit() {
         console.log('Starting sign in');
         try {
             await signInWithEmailAndPassword(auth, state.email, state.password);
@@ -34,7 +34,7 @@ export default function LandingPage() {
         } catch (error) {
             console.log(error);
         }
-	}
+    }
 
     return (
         <View style={styles.inputFormContainer}>
@@ -45,26 +45,26 @@ export default function LandingPage() {
                 <View style={styles.textInputWrapper}>
                     <TextInput
                         style={styles.textInput}
-                        placeholder="Email"
+                        placeholder='Email'
                         value={state.email}
-                        onChangeText={e => handleChange(e, 'email')}
+                        onChangeText={(e) => handleChange(e, 'email')}
                     />
                 </View>
                 <View style={styles.textInputWrapper}>
                     <TextInput
                         style={styles.textInput}
-                        placeholder="Password"
+                        placeholder='Password'
                         value={state.password}
-                        onChangeText={e => handleChange(e, 'password')}
+                        onChangeText={(e) => handleChange(e, 'password')}
                     />
                 </View>
                 <View style={styles.signInButtonWrapper}>
                     <Button
                         style={styles.signInButton}
-                        title="Sign In"
-                        accessibilityLabel="Sign in button"
+                        title='Sign In'
+                        accessibilityLabel='Sign in button'
                         color={white}
-                        onPress={onSubmit}
+                        onPress={() => onSubmit()}
                     />
                 </View>
                 <View style={styles.signUpWrapper}>
@@ -74,8 +74,8 @@ export default function LandingPage() {
                     <View style={styles.signUpButtonWrapper}>
                         <Button
                             style={styles.signUpButton}
-                            title="Sign Up"
-                            accessibilityLabel="Sign up button"
+                            title='Sign Up'
+                            accessibilityLabel='Sign up button'
                             color={black}
                         />
                     </View>
