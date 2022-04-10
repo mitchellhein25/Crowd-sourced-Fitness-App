@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-navigation/native": "^6.0.10",
+    "@react-navigation/native-stack": "^6.6.1",
     "dot-env": "^0.0.1",
     "dotenv": "^16.0.0",
     "expo": "~44.0.0",
@@ -51,9 +53,6 @@
     "verbose": true,
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
-    ],
-    "moduleDirectories": [
-      "node_modules"
     ],
     "setupFiles": [
       "./mock.js"

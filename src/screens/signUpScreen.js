@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 // The AsyncStorage warning is reference in App.js
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { getReactNativePersistence } from 'firebase/compat/auth/react-native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getReactNativePersistence } from 'firebase/auth/react-native';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import {
     StyleSheet, Text, TextInput, View, Button
 } from 'react-native';
@@ -11,19 +11,16 @@ import {
     primaryColor, white, black
 } from '../../assets/globalStyles';
 
-export default function LandingPage({ navigation }) {
+export default function SignUpScreen() {
     const [state, setState] = useState({
         email: '',
         emailError: false,
         password: '',
         passwordError: false,
-        signedIn: false,
-        userNotFoundError: false,
-        wrongPasswordError: false
+        emailAlreadyUsedError: false
     });
 
-    // const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
-    const auth = getAuth(app);
+    const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
 
     function handleChange(e, name) {
         setState({
@@ -31,8 +28,7 @@ export default function LandingPage({ navigation }) {
             [name]: e,
             emailError: false,
             passwordError: false,
-            userNotFoundError: false,
-            wrongPasswordError: false
+            emailAlreadyUsedError: false,
         });
     }
 
@@ -61,19 +57,13 @@ export default function LandingPage({ navigation }) {
         }
 
         try {
-            await signInWithEmailAndPassword(auth, state.email, state.password);
-            console.log('sign in successful');
-            navigation.navigate('Main App View', {});
+            await createUserWithEmailAndPassword(auth, state.email, state.password);
+            console.log('sign Up successful');
         } catch (error) {
-            if (error.code === 'auth/user-not-found') {
+            if (error.code === 'auth/email-already-in-use') {
                 setState({
                     ...state,
-                    userNotFoundError: true,
-                });
-            } else if (error.code === 'auth/wrong-password') {
-                setState({
-                    ...state,
-                    wrongPasswordError: true,
+                    emailAlreadyUsedError: true,
                 });
             } else {
                 console.log(error);
@@ -105,38 +95,21 @@ export default function LandingPage({ navigation }) {
                 </View>
                 {state.emailError
                     ? <Text>Please enter a valid email address.</Text>
-                    : null }
+                    : null}
                 {state.passwordError
                     ? <Text>Password must be at least 6 characters.</Text>
-                    : null }
-                {state.userNotFoundError
-                    ? <Text>There are no existing users with that email.</Text>
-                    : null }
-                {state.wrongPasswordError
-                    ? <Text>That is the incorrect password for that email.</Text>
-                    : null }
+                    : null}
+                {state.emailAlreadyUsedError
+                    ? <Text>That email has already been used to create an account.</Text>
+                    : null}
                 <View style={styles.signInButtonWrapper}>
                     <Button
                         style={styles.signInButton}
-                        title='Sign In'
-                        accessibilityLabel='Sign in button'
+                        title='Create Account'
+                        accessibilityLabel='Create Account button'
                         color={white}
                         onPress={(e) => onSubmit(e)}
                     />
-                </View>
-                <View style={styles.signUpWrapper}>
-                    <Text style={styles.signUpPreText}>
-                        Don&apos;t already have an account?
-                    </Text>
-                    <View style={styles.signUpButtonWrapper}>
-                        <Button
-                            style={styles.signUpButton}
-                            title='Sign Up'
-                            accessibilityLabel='Sign up button'
-                            color={black}
-                            onPress={() => navigation.navigate('Sign-Up Screen', {})}
-                        />
-                    </View>
                 </View>
             </View>
         </View>
@@ -182,24 +155,5 @@ const styles = StyleSheet.create({
         margin: 5,
         width: 200,
         backgroundColor: black
-    },
-    signUpButtonWrapper: {
-        margin: 5,
-        width: 200,
-        backgroundColor: white,
-    },
-    signUpWrapper: {
-        marginTop: 100,
-        alignItems: 'center'
-    },
-    signUpPreText: {
-        color: white,
-        textAlign: 'center',
-        fontSize: 15,
-        fontWeight: '500',
-        marginBottom: 10
-    },
-    signUpButton: {
-        width: 200,
     }
 });

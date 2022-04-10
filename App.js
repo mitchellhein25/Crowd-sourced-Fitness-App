@@ -1,8 +1,10 @@
 import React from 'react';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, LogBox } from 'react-native';
 import LandingPage from './src/screens/landingPage';
+import SignUpScreen from './src/screens/signUpScreen';
+import MainAppView from './src/screens/mainAppView';
 import { black, white } from './assets/globalStyles';
 import './firebase';
 
@@ -10,29 +12,28 @@ import './firebase';
 // https://github.com/firebase/firebase-js-sdk/issues/1847
 LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core and will be removed in a future release']);
 
-const AppNavigator = createStackNavigator(
-    {
-        Home: LandingPage
-    },
-    {
-        initialRouteName: 'Home',
-        defaultNavigationOptions: {
-            headerStyle: {
-                backgroundColor: black,
-            },
-            headerTintColor: white,
-            headerTitleStyle: {
-                fontWeight: 'bold',
-            },
-        },
-    }
-);
-
-const Navigator = createAppContainer(AppNavigator);
+const Stack = createNativeStackNavigator();
 
 export default function App() {
     return (
-        <Navigator style={styles.container} />
+        <NavigationContainer>
+            <Stack.Navigator
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: black,
+                    },
+                    headerTintColor: white,
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    }
+                }}
+                style={styles.container}
+            >
+                <Stack.Screen name="Landing Page" component={LandingPage} />
+                <Stack.Screen name="Sign-Up Screen" component={SignUpScreen} />
+                <Stack.Screen name="Main App View" component={MainAppView} />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 }
 
