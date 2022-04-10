@@ -1,16 +1,41 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { StyleSheet } from 'react-native';
 import LandingPage from './src/screens/landingPage';
+import { black, white } from './assets/globalStyles';
+
+const AppNavigator = createStackNavigator(
+    {
+        Home: LandingPage,
+    },
+    {
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: black,
+            },
+            headerTitleStyle: {
+                fontWeight: 'bold',
+                color: white,
+            },
+            headerTintColor: white,
+        },
+    },
+    {
+        initialRouteName: 'Landing Page',
+    }
+);
+
+const Navigator = createAppContainer(AppNavigator);
 
 export default function App() {
     return (
-        <View style={styles.container}>
+        <Navigator style={styles.container}>
             <LandingPage />
-        </View>
+        </Navigator>
     );
 }
 
-const white = '#fff';
 const styles = StyleSheet.create({
     container: {
         flex: 1,

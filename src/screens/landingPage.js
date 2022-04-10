@@ -1,42 +1,113 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+    StyleSheet, Text, TextInput, View, Button
+} from 'react-native';
+import {
+    primaryColor, white, black
+} from '../../assets/globalStyles';
 
 export default function LandingPage() {
     return (
         <View style={styles.inputFormContainer}>
-            
-            <Text>Landing Page</Text>
-            <View style={styles.textInputWrapper}>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Email"
-                />
+            <View style={styles.headerWrapper}>
+                <Text style={styles.headerText}>Fitness Challenge App</Text>
             </View>
-            <StatusBar style="auto" />
+            <View style={styles.signInFields}>
+                <View style={styles.textInputWrapper}>
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Username"
+                    />
+                </View>
+                <View style={styles.textInputWrapper}>
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Password"
+                    />
+                </View>
+                <View style={styles.signInButtonWrapper}>
+                    <Button
+                        style={styles.signInButton}
+                        title="Sign In"
+                        accessibilityLabel="Sign in button"
+                        color={white}
+                    />
+                </View>
+                <View style={styles.signUpWrapper}>
+                    <Text style={styles.signUpPreText}>
+                        Don&apos;t already have an account?
+                    </Text>
+                    <View style={styles.signUpButtonWrapper}>
+                        <Button
+                            style={styles.signUpButton}
+                            title="Sign Up"
+                            accessibilityLabel="Sign up button"
+                            color={black}
+                        />
+                    </View>
+                </View>
+            </View>
         </View>
     );
 }
 
-const inputBackgroundColor = '#ffe4e0';
-
 const styles = StyleSheet.create({
+    headerWrapper: {
+        marginTop: 100,
+        marginBottom: 100
+    },
+    headerText: {
+        fontSize: 40
+    },
     inputFormContainer: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-around',
-        width: '100%'
+        justifyContent: 'flex-start',
+        width: '100%',
+        backgroundColor: primaryColor
     },
     textInput: {
-        
+        textAlign: 'center',
+        height: '100%',
+        width: '100%',
+        borderWidth: 2,
+        borderRadius: 5,
     },
     textInputWrapper: {
-        backgroundColor: inputBackgroundColor,
-        borderRadius: 20,
-        width: '50%',
+        backgroundColor: white,
+        width: '80%',
         height: 40,
-        paddingHorizontal: 20,
         justifyContent: 'center',
+        alignItems: 'center',
+        margin: 5,
+        borderRadius: 5,
+    },
+    signInFields: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    signInButtonWrapper: {
+        margin: 5,
+        width: 200,
+        backgroundColor: black
+    },
+    signUpButtonWrapper: {
+        margin: 5,
+        width: 200,
+        backgroundColor: white,
+    },
+    signUpWrapper: {
+        marginTop: 100,
         alignItems: 'center'
-	}
+    },
+    signUpPreText: {
+        color: white,
+        textAlign: 'center',
+        fontSize: 15,
+        fontWeight: '500',
+        marginBottom: 10
+    },
+    signUpButton: {
+        width: 200,
+    }
 });
