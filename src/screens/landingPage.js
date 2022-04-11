@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getDatabase, ref, push } from 'firebase/database';
+// import { getDatabase, ref, push } from 'firebase/database';
 // The AsyncStorage warning is reference in App.js
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { getReactNativePersistence } from 'firebase/compat/auth/react-native';

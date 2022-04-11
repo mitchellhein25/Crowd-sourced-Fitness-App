@@ -7,7 +7,7 @@ export default function ActiveChallenges() {
         <View style={styles.container}>
             <Text>Active Challenges</Text>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({

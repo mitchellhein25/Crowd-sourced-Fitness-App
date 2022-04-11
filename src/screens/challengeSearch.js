@@ -7,7 +7,7 @@ export default function ChallengeSearch() {
         <View style={styles.container}>
             <Text>Challenge Search</Text>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
