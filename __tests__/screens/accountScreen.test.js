@@ -1,0 +1,16 @@
+import React from 'react';
+import renderer, { act } from 'react-test-renderer';
+
+import AccountScreen from '../../src/screens/accountScreen';
+
+describe('<AccountScreen /> load', () => {
+    it('has 1 child', () => {
+        const tree = renderer.create(<AccountScreen />).toJSON();
+        expect(tree.children.length).toBe(1);
+    });
+
+    it('renders correctly', async () => {
+        const tree = renderer.create(<AccountScreen />).toJSON();
+        await act(async () => { expect(tree).toMatchSnapshot(); })
+    });
+});

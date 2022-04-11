@@ -25,7 +25,6 @@ export default function MainAppView() {
             iconName = 'barbell-outline';
         }
 
-        // You can return any component that you like here!
         return <Ionicons name={iconName} color={color} size={size} />;
     }
 

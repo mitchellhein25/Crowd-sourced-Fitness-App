@@ -1,19 +1,16 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import renderer, { act } from 'react-test-renderer';
 
 import LandingPage from '../../src/screens/landingPage';
 
 describe('<LandingPage /> load', () => {
-    it('pass', () => {
-        expect(true).toBe(true);
-    });
-    it('has 2 children', () => {
+    it('has 3 children', () => {
         const tree = renderer.create(<LandingPage />).toJSON();
         expect(tree.children.length).toBe(3);
     });
 
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
         const tree = renderer.create(<LandingPage />).toJSON();
-        expect(tree).toMatchSnapshot();
+        await act(async () => { expect(tree).toMatchSnapshot(); })
     });
 });
