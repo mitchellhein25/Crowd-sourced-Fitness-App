@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getDatabase, ref, push } from 'firebase/database';
 // The AsyncStorage warning is reference in App.js
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { getReactNativePersistence } from 'firebase/compat/auth/react-native';
@@ -63,6 +64,7 @@ export default function LandingPage({ navigation }) {
         try {
             await signInWithEmailAndPassword(auth, state.email, state.password);
             console.log('sign in successful');
+
             navigation.navigate('Main App View', {});
         } catch (error) {
             if (error.code === 'auth/user-not-found') {
@@ -139,13 +141,19 @@ export default function LandingPage({ navigation }) {
                     </View>
                 </View>
             </View>
+            <Button
+                style={styles.signUpButton}
+                title='Skip sign in'
+                accessibilityLabel='Skip sign in button'
+                color={black}
+                onPress={() => navigation.navigate('Main App View', {})}
+            />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     headerWrapper: {
-        marginTop: 100,
         marginBottom: 100
     },
     headerText: {
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
     inputFormContainer: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         width: '100%',
         backgroundColor: primaryColor
     },

@@ -25,7 +25,8 @@ export default function App() {
                     headerTintColor: white,
                     headerTitleStyle: {
                         fontWeight: 'bold',
-                    }
+                    },
+                    headerShown: false
                 }}
                 style={styles.container}
             >
