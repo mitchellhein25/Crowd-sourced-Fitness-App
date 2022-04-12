@@ -41,7 +41,7 @@ export default function LandingPage({ navigation }) {
         let emailError = false;
         let passwordError = false;
 
-        e.preventDefault();
+        // e.preventDefault();
         // Validate Email address
         const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/i;
         if (!emailRegex.test(state.email)) {

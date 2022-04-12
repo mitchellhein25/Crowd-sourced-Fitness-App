@@ -11,6 +11,6 @@ describe('<SignUpScreen /> load', () => {
 
     it('renders correctly', async () => {
         const tree = renderer.create(<SignUpScreen />).toJSON();
-        await act(async () => { expect(tree).toMatchSnapshot(); })
+        await act(async () => { await expect(tree).toMatchSnapshot(); })
     });
 });

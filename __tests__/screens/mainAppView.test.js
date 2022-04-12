@@ -12,6 +12,6 @@ describe('<MainAppView /> load', () => {
     jest.useFakeTimers()
     it('renders correctly', async () => {
         const tree = await renderer.create(<NavigationContainer><MainAppView /></NavigationContainer>).toJSON();
-        await act(async () => { expect(tree).toMatchSnapshot(); })
+        await act(async () => { await expect(tree).toMatchSnapshot(); })
     });
 });

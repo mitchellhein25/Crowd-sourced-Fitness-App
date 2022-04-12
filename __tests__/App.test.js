@@ -9,5 +9,5 @@ describe('<App /> load', () => {
     });
     it('renders correctly', async() => {
         const tree = renderer.create(<App />).toJSON();
-        await act(async () => { expect(tree).toMatchSnapshot(); })    });
+        await act(async () => { await expect(tree).toMatchSnapshot(); })    });
 });
