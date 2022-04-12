@@ -30,6 +30,10 @@ module.exports = {
         'linebreak-style': 0,
         indent: ['error', 4],
         'react/jsx-indent': ['error', 4],
+        'react/jsx-indent-props': ['error', 4],
+        'import/no-mutable-exports': 0,
+        'global-require': 0,
+        'jsx-quotes': 0
 
     },
     globals: {

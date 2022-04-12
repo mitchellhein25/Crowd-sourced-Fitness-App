@@ -1,20 +1,42 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import TestScreen from './src/screens/testScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { StyleSheet, LogBox } from 'react-native';
+import LandingPage from './src/screens/landingPage';
+import SignUpScreen from './src/screens/signUpScreen';
+import MainAppView from './src/screens/mainAppView';
+import { black, white } from './assets/globalStyles';
+import './firebase';
+
+// Had to ignore a known warning for firebase auth with expo
+// https://github.com/firebase/firebase-js-sdk/issues/1847
+LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core and will be removed in a future release']);
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
     return (
-        <View style={styles.container}>
-            <Text>Open up App.js to start working on your app!</Text>
-            <Text>Hello World, Crowd-sourced Fitness App!</Text>
-            <StatusBar />
-            <TestScreen />
-        </View>
+        <NavigationContainer>
+            <Stack.Navigator
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: black,
+                    },
+                    headerTintColor: white,
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    }
+                }}
+                style={styles.container}
+            >
+                <Stack.Screen name="Landing Page" component={LandingPage} />
+                <Stack.Screen name="Sign-Up Screen" component={SignUpScreen} />
+                <Stack.Screen name="Main App View" component={MainAppView} />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 }
 
-const white = '#fff';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
