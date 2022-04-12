@@ -49,4 +49,71 @@ describe('<SignUpScreen /> functionality', () => {
         const elements = getAllByText('Password must be at least 6 characters.');
         expect(elements).toHaveLength(1);
     });
+
+    it('please fill out all fields error', async () => {
+        const { getByPlaceholderText, getByText, getAllByText } = screen;
+        fireEvent.changeText(
+            getByPlaceholderText('First Name'),
+            'first test'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('Last Name'),
+            'last test'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('Password'),
+            '123'
+        );
+        await fireEvent.press(getByText('Create Account'));
+        const elements = getAllByText('Please fill out all fields.');
+        expect(elements).toHaveLength(1);
+    });
+
+    it('email already used', async () => {
+        const { getByPlaceholderText, getByText, getAllByText } = screen;
+        fireEvent.changeText(
+            getByPlaceholderText('Email'),
+            'test@email.com'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('First Name'),
+            'first test'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('Last Name'),
+            'last test'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('Password'),
+            '1233453'
+        );
+        await act(async () => {
+            await fireEvent.press(getByText('Create Account'));
+        });
+        const elements = getAllByText('That email has already been used to create an account.');
+        expect(elements).toHaveLength(1);
+    });
+
+    it('email invalid', async () => {
+        const { getByPlaceholderText, getByText, getAllByText } = screen;
+        fireEvent.changeText(
+            getByPlaceholderText('Email'),
+            'testnotvalidemail@email'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('First Name'),
+            'first test'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('Last Name'),
+            'last test'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('Password'),
+            '1233463'
+        );
+        await fireEvent.press(getByText('Create Account'));
+        const elements = getAllByText('Please enter a valid email address.');
+        expect(elements).toHaveLength(1);
+    });
 });
