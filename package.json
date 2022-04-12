@@ -8,21 +8,39 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint",
-    "test": "jest --passWithNoTests"
+    "lint": "eslint *.js App.js src/**/*.js",
+    "test": "jest --detectOpenHandles --forceExit"
   },
   "dependencies": {
+    "@expo/vector-icons": "^12.0.5",
+    "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-navigation/bottom-tabs": "^6.3.1",
+    "@react-navigation/native": "^6.0.10",
+    "@react-navigation/native-stack": "^6.6.1",
+    "@testing-library/jest-dom": "^5.16.4",
+    "babel-preset-expo": "^9.0.2",
+    "dot-env": "^0.0.1",
+    "dotenv": "^16.0.0",
     "expo": "~44.0.0",
+    "expo-constants": "^13.0.2",
     "expo-status-bar": "~1.2.0",
+    "expo-updates": "~0.11.6",
+    "firebase": "^9.6.10",
+    "firebase-mock": "^2.3.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
+    "react-native-gesture-handler": "~2.1.0",
+    "react-native-reanimated": "~2.3.1",
+    "react-native-safe-area-context": "3.3.2",
     "react-native-web": "0.17.1",
-    "expo-updates": "~0.11.6"
+    "react-navigation": "^4.4.4",
+    "react-navigation-stack": "^2.10.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/eslint-parser": "^7.5.4",
+    "@testing-library/react-native": "^9.1.0",
     "eslint": "^8.12.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.4",
@@ -30,14 +48,30 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
     "eslint-plugin-react-native": "^4.0.0",
-    "jest": "^27.5.1",
+    "jest": "^26.6.3",
     "jest-expo": "^44.0.1",
-    "react-test-renderer": "^18.0.0"
+    "react-test-renderer": "17.0.1"
   },
   "private": true,
   "jest": {
     "preset": "jest-expo",
     "verbose": true,
-    "transformIgnorePatterns": [ "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|sentry-expo|native-base" ]
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ],
+    "setupFiles": [
+      "./mock.js"
+    ],
+    "roots": [
+      "<rootDir>"
+    ],
+    "modulePaths": [
+      "<rootDir>",
+      "<rootDir>/src/"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
   }
 }
