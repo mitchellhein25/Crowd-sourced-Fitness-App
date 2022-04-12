@@ -37,7 +37,7 @@ export default function LandingPage({ navigation }) {
         });
     }
 
-    async function onSubmit(e) {
+    async function onSubmit() {
         let emailError = false;
         let passwordError = false;
 
