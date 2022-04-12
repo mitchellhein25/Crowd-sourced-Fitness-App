@@ -73,7 +73,7 @@ describe('<SignUpScreen /> functionality', () => {
         const { getByPlaceholderText, getByText, getAllByText } = screen;
         fireEvent.changeText(
             getByPlaceholderText('Email'),
-            'test@email.com'
+            testAccountEmail
         );
         fireEvent.changeText(
             getByPlaceholderText('First Name'),
