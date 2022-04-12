@@ -39,12 +39,10 @@ export default function SignUpScreen({ navigation }) {
         });
     }
 
-    async function onSubmit(e) {
+    async function onSubmit() {
         let emailError = false;
         let passwordError = false;
         let emptyFieldError = false;
-
-        e.preventDefault();
 
         if (state.email === '' || state.password === '' || state.firstName === '' || state.lastName === '') {
             emptyFieldError = true;

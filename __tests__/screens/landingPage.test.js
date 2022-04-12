@@ -1,7 +1,8 @@
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import LandingPage from '../../src/screens/landingPage';
+import { testAccountEmail, testAccountPass } from '../../assets/testVariables'
 
 describe('<LandingPage /> rendering', () => {
 
@@ -69,7 +70,7 @@ describe('<LandingPage /> functionality', () => {
         const { getByPlaceholderText, getByText, getAllByText } = landingPage;
         fireEvent.changeText(
             getByPlaceholderText('Email'),
-            'test@email.com'
+            testAccountEmail
         );
         fireEvent.changeText(
             getByPlaceholderText('Password'),
@@ -81,14 +82,4 @@ describe('<LandingPage /> functionality', () => {
         const elements = await getAllByText('That is the incorrect password for that email.');
         await expect(elements).toHaveLength(1);
     });
-
-    //it('navigate to the sign up page', async () => {
-    //    const { getByText, getAllByText } = landingPage;
-        
-    //    await act(async () => {
-    //        await fireEvent.press(getByText('Sign Up'));
-    //    });
-    //    const elements = await getAllByText('Create Account');
-    //    await expect(elements).toHaveLength(1);
-    //});
 });
