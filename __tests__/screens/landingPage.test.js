@@ -64,4 +64,31 @@ describe('<LandingPage /> functionality', () => {
         const elements = await getAllByText('There are no existing users with that email.');
         await expect(elements).toHaveLength(1);
     });
+
+    it('incorrect password for that email', async () => {
+        const { getByPlaceholderText, getByText, getAllByText } = landingPage;
+        fireEvent.changeText(
+            getByPlaceholderText('Email'),
+            'test@email.com'
+        );
+        fireEvent.changeText(
+            getByPlaceholderText('Password'),
+            'incorrectPassword'
+        );
+        await act(async () => {
+            await fireEvent.press(getByText('Sign In'));
+        });
+        const elements = await getAllByText('That is the incorrect password for that email.');
+        await expect(elements).toHaveLength(1);
+    });
+
+    //it('navigate to the sign up page', async () => {
+    //    const { getByText, getAllByText } = landingPage;
+        
+    //    await act(async () => {
+    //        await fireEvent.press(getByText('Sign Up'));
+    //    });
+    //    const elements = await getAllByText('Create Account');
+    //    await expect(elements).toHaveLength(1);
+    //});
 });

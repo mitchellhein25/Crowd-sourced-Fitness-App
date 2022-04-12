@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint *.js App.js src/**/*.js",
-    "test": "jest --watch --passWithNoTests"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
