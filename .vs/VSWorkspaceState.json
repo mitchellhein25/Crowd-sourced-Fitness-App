@@ -3,10 +3,10 @@
     "",
     "\\assets",
     "\\src",
-    "\\src\\screens",
+    "\\__mocks__",
     "\\__tests__",
-    "\\__tests__\\screens"
+    "\\__tests__\\backend"
   ],
-  "SelectedNode": "\\mock.js",
+  "SelectedNode": "\\src",
   "PreviewInSolutionExplorer": false
 }

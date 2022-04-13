@@ -4,24 +4,25 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import AccountScreen from './accountScreen';
 import ActiveChallenges from './activeChallenges';
 import ChallengeSearch from './challengeSearch';
-import { accentColor } from '../../assets/globalStyles';
+import { accentColor, white } from '../../assets/globalStyles';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainAppView() {
+export default function MainAppView({ route }) {
 
+    const { user } = route.params;
     const accountScreenName = 'Accounts';
     const activeChallengesScreenName = 'My Challenges';
     const challengeSearchScreenName = 'All Challenges';
 
-    function tabBarIconFunction(route, color, size) {
+    function tabBarIconFunction(screenRoute, color, size) {
         let iconName;
 
-        if (route.name === accountScreenName) {
+        if (screenRoute.name === accountScreenName) {
             iconName = 'person-outline';
-        } else if (route.name === activeChallengesScreenName) {
+        } else if (screenRoute.name === activeChallengesScreenName) {
             iconName = 'trending-up-outline';
-        } else if (route.name === challengeSearchScreenName) {
+        } else if (screenRoute.name === challengeSearchScreenName) {
             iconName = 'barbell-outline';
         }
 
@@ -30,16 +31,18 @@ export default function MainAppView() {
 
     return (
         <Tab.Navigator
-            screenOptions={({ route }) => ({
-                tabBarIcon: ({ color, size }) => tabBarIconFunction(route, color, size),
+            screenOptions={({ screenRoute }) => ({
+                tabBarIcon: ({ color, size }) => tabBarIconFunction(screenRoute, color, size),
                 headerShown: false,
                 tabBarActiveTintColor: accentColor,
-                tabBarInactiveTintColor: 'gray',
+                tabBarInactiveTintColor: 'grey',
+                tabBarActiveBackgroundColor: white,
+                tabBarInactiveBackgroundColor: white,
             })}
         >
             <Tab.Screen name={challengeSearchScreenName} component={ChallengeSearch} />
             <Tab.Screen name={activeChallengesScreenName} component={ActiveChallenges} />
-            <Tab.Screen name={accountScreenName} component={AccountScreen} />
+            <Tab.Screen name={accountScreenName} children={() => <AccountScreen user={user} />} />
         </Tab.Navigator>
     );
 }

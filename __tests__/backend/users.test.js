@@ -1,7 +1,4 @@
-import React from 'react';
 import { getDatabase, ref, push, get, remove } from 'firebase/database';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import app from '../../firebase';
 
 describe('User table tests', () => {
 
