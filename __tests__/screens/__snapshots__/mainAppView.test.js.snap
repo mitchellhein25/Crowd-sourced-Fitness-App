@@ -155,7 +155,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
               "flex": 1,
             },
             Object {
-              "backgroundColor": "transparent",
+              "backgroundColor": "white",
             },
             Object {
               "flexDirection": "column",
@@ -265,7 +265,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
               "flex": 1,
             },
             Object {
-              "backgroundColor": "transparent",
+              "backgroundColor": "white",
             },
             Object {
               "flexDirection": "column",
@@ -335,7 +335,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
                 "textAlign": "center",
               },
               Object {
-                "color": "gray",
+                "color": "grey",
               },
               Object {
                 "fontSize": 10,
@@ -375,7 +375,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
               "flex": 1,
             },
             Object {
-              "backgroundColor": "transparent",
+              "backgroundColor": "white",
             },
             Object {
               "flexDirection": "column",
@@ -445,7 +445,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
                 "textAlign": "center",
               },
               Object {
-                "color": "gray",
+                "color": "grey",
               },
               Object {
                 "fontSize": 10,

@@ -102,7 +102,7 @@ export default function SignUpScreen({ navigation }) {
     return (
         <View style={styles.inputFormContainer}>
             <View style={styles.headerWrapper}>
-                <Text style={styles.headerText}>Fitness Challenge App</Text>
+                <Text style={styles.headerText}>Sign Up</Text>
             </View>
             {state.signUpSuccessful
                 ? (

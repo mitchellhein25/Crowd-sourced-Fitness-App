@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-// import { getDatabase, ref, push } from 'firebase/database';
+import {
+    getDatabase, ref, get, equalTo, query, orderByChild
+} from 'firebase/database';
 // The AsyncStorage warning is reference in App.js
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { getReactNativePersistence } from 'firebase/compat/auth/react-native';
@@ -25,6 +27,7 @@ export default function LandingPage({ navigation }) {
 
     // const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
     const auth = getAuth(app);
+    const db = getDatabase();
 
     function handleChange(e, name) {
         setState({
@@ -62,10 +65,13 @@ export default function LandingPage({ navigation }) {
         }
 
         try {
+            // Sign user in with Firebase Auth
             await signInWithEmailAndPassword(auth, state.email, state.password);
-            console.log('sign in successful');
-
-            navigation.navigate('Main App View', {});
+            // If successful, look the user up in the user database
+            const usersRef = ref(db, 'users/');
+            const user = await get(query(usersRef, orderByChild('email'), equalTo(state.email)));
+            const userObject = user.toJSON();
+            navigation.navigate('Main App View', { user: userObject });
         } catch (error) {
             if (error.code === 'auth/user-not-found') {
                 setState({

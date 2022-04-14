@@ -6,7 +6,7 @@ import AccountScreen from '../../src/screens/accountScreen';
 describe('<AccountScreen /> load', () => {
     it('has 1 child', () => {
         const tree = renderer.create(<AccountScreen />).toJSON();
-        expect(tree.children.length).toBe(1);
+        expect(tree.children.length).toBe(2);
     });
 
     it('renders correctly', async () => {

@@ -26,7 +26,7 @@ export default function App() {
                     headerTitleStyle: {
                         fontWeight: 'bold',
                     },
-                    headerShown: false
+                    headerShown: false,
                 }}
                 style={styles.container}
             >
