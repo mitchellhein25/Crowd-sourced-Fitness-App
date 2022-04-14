@@ -1,9 +1,10 @@
 import { getDatabase, ref, push, get, remove } from 'firebase/database';
+import app from '../../firebase';
 
 describe('User table tests', () => {
 
     beforeEach(() => {
-        db = getDatabase();
+        db = getDatabase(app);
     });
 
     it('Insert into User table', async () => {

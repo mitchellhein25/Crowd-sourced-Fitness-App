@@ -10,19 +10,19 @@ const Tab = createBottomTabNavigator();
 
 export default function MainAppView({ route }) {
 
-    const { user } = route.params;
+    const { user } = route.params ? route.params : {};
     const accountScreenName = 'Accounts';
     const activeChallengesScreenName = 'My Challenges';
     const challengeSearchScreenName = 'All Challenges';
 
-    function tabBarIconFunction(screenRoute, color, size) {
+    function tabBarIconFunction(routes, color, size) {
         let iconName;
 
-        if (screenRoute.name === accountScreenName) {
+        if (routes.name === accountScreenName) {
             iconName = 'person-outline';
-        } else if (screenRoute.name === activeChallengesScreenName) {
+        } else if (routes.name === activeChallengesScreenName) {
             iconName = 'trending-up-outline';
-        } else if (screenRoute.name === challengeSearchScreenName) {
+        } else if (routes.name === challengeSearchScreenName) {
             iconName = 'barbell-outline';
         }
 
@@ -31,8 +31,8 @@ export default function MainAppView({ route }) {
 
     return (
         <Tab.Navigator
-            screenOptions={({ screenRoute }) => ({
-                tabBarIcon: ({ color, size }) => tabBarIconFunction(screenRoute, color, size),
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ color, size }) => tabBarIconFunction(route, color, size),
                 headerShown: false,
                 tabBarActiveTintColor: accentColor,
                 tabBarInactiveTintColor: 'grey',

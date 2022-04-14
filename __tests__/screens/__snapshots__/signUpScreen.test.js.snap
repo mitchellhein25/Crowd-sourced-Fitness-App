@@ -27,7 +27,7 @@ exports[`<SignUpScreen /> rendering renders correctly 1`] = `
         }
       }
     >
-      Fitness Challenge App
+      Sign Up
     </Text>
   </View>
   <View

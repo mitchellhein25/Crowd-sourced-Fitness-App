@@ -3,10 +3,11 @@
     "",
     "\\assets",
     "\\src",
+    "\\src\\screens",
     "\\__mocks__",
-    "\\__tests__",
-    "\\__tests__\\backend"
+    "\\__tests__\\backend",
+    "\\__tests__\\screens"
   ],
-  "SelectedNode": "\\src",
+  "SelectedNode": "\\.eslintrc.js",
   "PreviewInSolutionExplorer": false
 }
