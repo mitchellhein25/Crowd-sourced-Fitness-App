@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { getDatabase, ref, push } from 'firebase/database';
-// The AsyncStorage warning is reference in App.js
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { getReactNativePersistence } from 'firebase/auth/react-native';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import {
     StyleSheet, Text, TextInput, View, Button
@@ -81,8 +78,8 @@ export default function SignUpScreen({ navigation }) {
                 firstName: state.firstName,
                 lastName: state.lastName,
                 password: state.password,
+                profilePic: ''
             });
-            console.log('sign Up successful');
             setState({
                 ...state,
                 signUpSuccessful: true,

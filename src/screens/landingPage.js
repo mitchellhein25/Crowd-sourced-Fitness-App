@@ -24,7 +24,6 @@ export default function LandingPage({ navigation }) {
         userNotFoundError: false,
         wrongPasswordError: false
     });
-
     // const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
     const auth = getAuth(app);
     const db = getDatabase();
