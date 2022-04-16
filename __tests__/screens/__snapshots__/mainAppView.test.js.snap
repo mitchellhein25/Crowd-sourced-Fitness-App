@@ -66,10 +66,73 @@ exports[`<MainAppView /> load renders correctly 1`] = `
                 "alignItems": "center",
                 "backgroundColor": "white",
                 "flex": 1,
-                "justifyContent": "center",
+                "justifyContent": "flex-start",
+                "paddingTop": "15%",
               }
             }
           >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "rgb(212, 0, 0)",
+                  "borderRadius": 30,
+                  "padding": 10,
+                  "shadowColor": "black",
+                  "shadowOffset": Object {
+                    "height": 1,
+                    "width": 1,
+                  },
+                  "shadowOpacity": 0.75,
+                  "shadowRadius": 3,
+                }
+              }
+            >
+              <View
+                accessibilityLabel="Create a New Public Challenge button"
+                accessibilityRole="button"
+                accessibilityState={Object {}}
+                accessible={true}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  Object {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Array [
+                      Object {},
+                    ]
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Object {
+                          "color": "#007AFF",
+                          "fontSize": 18,
+                          "margin": 8,
+                          "textAlign": "center",
+                        },
+                        Object {
+                          "color": "white",
+                        },
+                      ]
+                    }
+                  >
+                    Create a New Public Challenge
+                  </Text>
+                </View>
+              </View>
+            </View>
             <Text>
               Challenge Search
             </Text>
@@ -155,7 +218,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
               "flex": 1,
             },
             Object {
-              "backgroundColor": "transparent",
+              "backgroundColor": "white",
             },
             Object {
               "flexDirection": "column",
@@ -265,7 +328,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
               "flex": 1,
             },
             Object {
-              "backgroundColor": "transparent",
+              "backgroundColor": "white",
             },
             Object {
               "flexDirection": "column",
@@ -335,7 +398,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
                 "textAlign": "center",
               },
               Object {
-                "color": "gray",
+                "color": "grey",
               },
               Object {
                 "fontSize": 10,
@@ -375,7 +438,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
               "flex": 1,
             },
             Object {
-              "backgroundColor": "transparent",
+              "backgroundColor": "white",
             },
             Object {
               "flexDirection": "column",
@@ -445,7 +508,7 @@ exports[`<MainAppView /> load renders correctly 1`] = `
                 "textAlign": "center",
               },
               Object {
-                "color": "gray",
+                "color": "grey",
               },
               Object {
                 "fontSize": 10,

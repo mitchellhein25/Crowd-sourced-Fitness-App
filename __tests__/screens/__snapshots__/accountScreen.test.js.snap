@@ -7,12 +7,377 @@ exports[`<AccountScreen /> load renders correctly 1`] = `
       "alignItems": "center",
       "backgroundColor": "white",
       "flex": 1,
-      "justifyContent": "center",
+      "justifyContent": "flex-start",
+      "paddingTop": "20%",
     }
   }
 >
-  <Text>
-    Account
-  </Text>
+  <View
+    style={
+      Object {
+        "display": "flex",
+        "justifyContent": "flex-start",
+        "marginBottom": "10%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 30,
+        }
+      }
+    >
+      Account
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignSelf": "center",
+          "borderColor": "lightgrey",
+          "borderRadius": 150,
+          "borderWidth": 1,
+          "height": 150,
+          "justifyContent": "center",
+          "marginBottom": "5%",
+          "width": 150,
+        }
+      }
+    >
+      <View
+        accessibilityLabel="Upload profile pic button"
+        accessibilityRole="button"
+        accessibilityState={Object {}}
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {},
+            ]
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#007AFF",
+                  "fontSize": 18,
+                  "margin": 8,
+                  "textAlign": "center",
+                },
+                Object {
+                  "color": "rgb(212, 0, 0)",
+                },
+              ]
+            }
+          >
+            Upload Picture
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "borderColor": "lightgrey",
+          "borderStyle": "solid",
+          "borderTopWidth": 1,
+          "display": "flex",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "padding": "3%",
+          "paddingLeft": 30,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontSize": 15,
+          }
+        }
+      >
+        no user logged in
+      </Text>
+      <View
+        accessibilityLabel="Edit first name button"
+        accessibilityRole="button"
+        accessibilityState={Object {}}
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {},
+            ]
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#007AFF",
+                  "fontSize": 18,
+                  "margin": 8,
+                  "textAlign": "center",
+                },
+                Object {
+                  "color": "rgb(212, 0, 0)",
+                },
+              ]
+            }
+          >
+            Edit
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "borderColor": "lightgrey",
+          "borderStyle": "solid",
+          "borderTopWidth": 1,
+          "display": "flex",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "padding": "3%",
+          "paddingLeft": 30,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontSize": 15,
+          }
+        }
+      >
+        no user logged in
+      </Text>
+      <View
+        accessibilityLabel="Edit last name button"
+        accessibilityRole="button"
+        accessibilityState={Object {}}
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {},
+            ]
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#007AFF",
+                  "fontSize": 18,
+                  "margin": 8,
+                  "textAlign": "center",
+                },
+                Object {
+                  "color": "rgb(212, 0, 0)",
+                },
+              ]
+            }
+          >
+            Edit
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "borderColor": "lightgrey",
+          "borderStyle": "solid",
+          "borderTopWidth": 1,
+          "display": "flex",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "padding": "3%",
+          "paddingLeft": 30,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontSize": 15,
+          }
+        }
+      >
+        no user logged in
+      </Text>
+      <View
+        accessibilityLabel="Edit email button"
+        accessibilityRole="button"
+        accessibilityState={Object {}}
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {},
+            ]
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#007AFF",
+                  "fontSize": 18,
+                  "margin": 8,
+                  "textAlign": "center",
+                },
+                Object {
+                  "color": "rgb(212, 0, 0)",
+                },
+              ]
+            }
+          >
+            Edit
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "borderColor": "lightgrey",
+          "borderStyle": "solid",
+          "borderTopWidth": 1,
+          "display": "flex",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "padding": "3%",
+          "paddingLeft": 30,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontSize": 15,
+          }
+        }
+      >
+        *****************
+      </Text>
+      <View
+        accessibilityLabel="Edit password button"
+        accessibilityRole="button"
+        accessibilityState={Object {}}
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {},
+            ]
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#007AFF",
+                  "fontSize": 18,
+                  "margin": 8,
+                  "textAlign": "center",
+                },
+                Object {
+                  "color": "rgb(212, 0, 0)",
+                },
+              ]
+            }
+          >
+            Edit
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
 </View>
 `;

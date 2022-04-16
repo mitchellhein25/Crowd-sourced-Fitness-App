@@ -5,7 +5,8 @@ import { StyleSheet, LogBox } from 'react-native';
 import LandingPage from './src/screens/landingPage';
 import SignUpScreen from './src/screens/signUpScreen';
 import MainAppView from './src/screens/mainAppView';
-import { black, white } from './assets/globalStyles';
+import AddNewChallenge from './src/screens/addNewChallenge';
+import { black, white } from './src/utils/globalStyles';
 import './firebase';
 
 // Had to ignore a known warning for firebase auth with expo
@@ -26,13 +27,14 @@ export default function App() {
                     headerTitleStyle: {
                         fontWeight: 'bold',
                     },
-                    headerShown: false
+                    headerShown: false,
                 }}
                 style={styles.container}
             >
                 <Stack.Screen name="Landing Page" component={LandingPage} />
                 <Stack.Screen name="Sign-Up Screen" component={SignUpScreen} />
                 <Stack.Screen name="Main App View" component={MainAppView} />
+                <Stack.Screen name="Add New Challenge" component={AddNewChallenge} />
             </Stack.Navigator>
         </NavigationContainer>
     );

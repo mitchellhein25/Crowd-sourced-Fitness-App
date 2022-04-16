@@ -1,11 +1,268 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { white } from '../../assets/globalStyles';
+import React, { useState } from 'react';
+import * as ImagePicker from 'expo-image-picker';
+import {
+    StyleSheet, View, Text, Button, Image, TextInput
+} from 'react-native';
+import {
+    getDatabase, ref, update
+} from 'firebase/database';
+import app from '../../firebase';
+import {
+    primaryColor, secondaryColor, white
+} from '../utils/globalStyles';
 
-export default function AccountScreen() {
+export default function AccountScreen({ user }) {
+
+    const [state, setState] = useState({
+        email: user ? Object.values(user)[0].email : 'no user logged in',
+        firstName: user ? Object.values(user)[0].firstName : 'no user logged in',
+        lastName: user ? Object.values(user)[0].lastName : 'no user logged in',
+        password: user ? Object.values(user)[0].password : 'no user logged in',
+        id: user ? Object.keys(user)[0] : 'no user logged in',
+        profilePic: user ? Object.values(user)[0].profilePic : '',
+        editFirstName: false,
+        editLastName: false,
+        editEmail: false,
+        editPassword: false
+    });
+
+    const pickImage = async () => {
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        await setState({
+            ...state,
+            profilePic: result.uri
+        });
+        try {
+            const db = getDatabase(app);
+            const userRef = ref(db, `users/${state.id}`);
+            update(userRef, {
+                email: state.email,
+                firstName: state.firstName,
+                lastName: state.lastName,
+                password: state.password,
+                profilePic: state.profilePic
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleChange = (e, name) => {
+        setState({
+            ...state,
+            [name]: e,
+        });
+    };
+
+    const updateAccountInfo = async (e, name) => {
+        try {
+            const db = getDatabase(app);
+            const userRef = ref(db, `users/${state.id}`);
+            update(userRef, {
+                email: state.email,
+                firstName: state.firstName,
+                lastName: state.lastName,
+                password: state.password,
+                profilePic: state.profilePic
+            });
+            setState({
+                ...state,
+                [name]: false,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <View style={styles.container}>
-            <Text>Account</Text>
+            <View style={styles.headerContainer}>
+                <Text style={styles.header}>Account</Text>
+            </View>
+            <View style={styles.accountInfoContainer}>
+                <View style={styles.imageContainer}>
+                    {state.profilePic !== ''
+                        ? (
+                            <Image
+                                style={styles.image}
+                                source={{
+                                    uri: state.profilePic
+                                }}
+                            />
+                        )
+                        : (
+                            <Button
+                                style={styles.imageText}
+                                title='Upload Picture'
+                                accessibilityLabel='Upload profile pic button'
+                                color={primaryColor}
+                                onPress={pickImage}
+                            />
+                        )}
+                </View>
+                {state.profilePic !== ''
+                    ? (
+                        <Button
+                            style={styles.imageText}
+                            title='Change Picture'
+                            accessibilityLabel='Change Picture button'
+                            color={primaryColor}
+                            onPress={pickImage}
+                        />
+                    ) : null}
+                {state.editFirstName
+                    ? (
+                        <View style={styles.accountListItem}>
+                            <TextInput
+                                style={styles.textInput}
+                                value={state.firstName}
+                                onChangeText={(e) => handleChange(e, 'firstName')}
+                            />
+                            <Button
+                                style={styles.editButton}
+                                title='Save'
+                                accessibilityLabel='Save first name button'
+                                color={primaryColor}
+                                onPress={(e) => updateAccountInfo(e, 'editFirstName')}
+                            />
+                        </View>
+                    )
+                    : (
+                        <View style={styles.accountListItem}>
+                            <Text style={styles.listItemText}>
+                                {state.firstName}
+                            </Text>
+                            <Button
+                                style={styles.editButton}
+                                title='Edit'
+                                accessibilityLabel='Edit first name button'
+                                color={primaryColor}
+                                onPress={() => {
+                                    setState({
+                                        ...state,
+                                        editFirstName: !state.editFirstName
+                                    });
+                                }}
+                            />
+                        </View>
+                    )}
+                {state.editLastName
+                    ? (
+                        <View style={styles.accountListItem}>
+                            <TextInput
+                                style={styles.textInput}
+                                value={state.lastName}
+                                onChangeText={(e) => handleChange(e, 'lastName')}
+                            />
+                            <Button
+                                style={styles.editButton}
+                                title='Save'
+                                accessibilityLabel='Save last name button'
+                                color={primaryColor}
+                                onPress={(e) => updateAccountInfo(e, 'editLastName')}
+                            />
+                        </View>
+                    )
+                    : (
+                        <View style={styles.accountListItem}>
+                            <Text style={styles.listItemText}>
+                                {state.lastName}
+                            </Text>
+                            <Button
+                                style={styles.editButton}
+                                title='Edit'
+                                accessibilityLabel='Edit last name button'
+                                color={primaryColor}
+                                onPress={() => {
+                                    setState({
+                                        ...state,
+                                        editLastName: !state.editLastName
+                                    });
+                                }}
+                            />
+                        </View>
+                    )}
+                {state.editEmail
+                    ? (
+                        <View style={styles.accountListItem}>
+                            <TextInput
+                                style={styles.textInput}
+                                value={state.email}
+                                onChangeText={(e) => handleChange(e, 'email')}
+                            />
+                            <Button
+                                style={styles.editButton}
+                                title='Save'
+                                accessibilityLabel='Save email button'
+                                color={primaryColor}
+                                onPress={(e) => updateAccountInfo(e, 'editEmail')}
+                            />
+                        </View>
+                    )
+                    : (
+                        <View style={styles.accountListItem}>
+                            <Text style={styles.listItemText}>
+                                {state.email}
+                            </Text>
+                            <Button
+                                style={styles.editButton}
+                                title='Edit'
+                                accessibilityLabel='Edit email button'
+                                color={primaryColor}
+                                onPress={() => {
+                                    setState({
+                                        ...state,
+                                        editEmail: !state.editEmail
+                                    });
+                                }}
+                            />
+                        </View>
+                    )}
+                {state.editPassword
+                    ? (
+                        <View style={styles.accountListItem}>
+                            <TextInput
+                                style={styles.textInput}
+                                value={state.password}
+                                onChangeText={(e) => handleChange(e, 'password')}
+                            />
+                            <Button
+                                style={styles.editButton}
+                                title='Save'
+                                accessibilityLabel='Save password button'
+                                color={primaryColor}
+                                onPress={(e) => updateAccountInfo(e, 'editPassword')}
+                            />
+                        </View>
+                    )
+                    : (
+                        <View style={styles.accountListItem}>
+                            <Text style={styles.listItemText}>
+                                {'*'.repeat(state.password.length)}
+                            </Text>
+                            <Button
+                                style={styles.password}
+                                title='Edit'
+                                accessibilityLabel='Edit password button'
+                                color={primaryColor}
+                                onPress={() => {
+                                    setState({
+                                        ...state,
+                                        editPassword: !state.editPassword
+                                    });
+                                }}
+                            />
+                        </View>
+                    )}
+            </View>
         </View>
     );
 }
@@ -13,8 +270,65 @@ export default function AccountScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: white,
         alignItems: 'center',
+        justifyContent: 'flex-start',
+        backgroundColor: white,
+        paddingTop: '20%',
+    },
+    header: {
+        fontSize: 30
+    },
+    headerContainer: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        marginBottom: '10%'
+    },
+    accountInfoContainer: {
+        width: '100%'
+    },
+    accountListItem: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: '3%',
+        borderColor: secondaryColor,
+        borderStyle: 'solid',
+        borderTopWidth: 1,
+        alignItems: 'center',
+        paddingLeft: 30
+    },
+    listItemText: {
+        fontSize: 15,
+    },
+    textInput: {
+        color: primaryColor,
+        borderWidth: 1,
+        padding: '5%',
+        borderRadius: 20,
+        borderColor: secondaryColor,
+    },
+    // listItemTitle: {
+    //    fontWeight: '700',
+    //    fontSize: 15
+    // },
+    imageContainer: {
+        borderWidth: 1,
+        borderColor: secondaryColor,
+        borderRadius: 150,
+        height: 150,
+        width: 150,
+        alignSelf: 'center',
+        marginBottom: '5%',
         justifyContent: 'center',
     },
+    imageText: {
+        alignSelf: 'center',
+        color: primaryColor,
+    },
+    image: {
+        borderRadius: 150,
+        height: 150,
+        width: 150,
+        resizeMode: 'cover'
+    }
 });

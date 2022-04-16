@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export default {
     expo: {
-        name: 'Crowd-sourced-Fitness-App',
+        name: 'Crowd Sourced Fitness App',
         slug: 'Crowd-sourced-Fitness-App',
         version: '1.0.0',
         orientation: 'portrait',
@@ -39,6 +39,15 @@ export default {
             firebaseAppId: process.env.FIREBASE_APP_ID,
             firebaseDatabaseURL: process.env.FIREBASE_DATABASE_URL,
             firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID
-        }
+        },
+        plugins: [
+            [
+                'expo-image-picker',
+                {
+                    photosPermission: 'Allow Crowd Sourced Fitness App to access your photos',
+                    cameraPermission: 'Allow Crowd Sourced Fitness App to access your camera'
+                }
+            ]
+        ]
     }
 };

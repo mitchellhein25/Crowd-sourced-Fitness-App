@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { white } from '../../assets/globalStyles';
+import { white } from '../utils/globalStyles';
 
 export default function ActiveChallenges() {
     return (

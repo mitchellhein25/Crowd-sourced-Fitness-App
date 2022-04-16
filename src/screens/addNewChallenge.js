@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { getDatabase, ref, push } from 'firebase/database';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
+// import { Picker } from '@react-native-picker/picker';
 import {
-    StyleSheet, Text, TextInput, View, Button
+    StyleSheet, Text, TextInput, View, Button, Picker
 } from 'react-native';
 import app from '../../firebase';
 import {
     primaryColor, white, black, accentColor
 } from '../utils/globalStyles';
+// import { challengeTypes } from '../../src/utils/challengeTypes';
 
-export default function SignUpScreen({ navigation }) {
+export default function AddNewChallenge() {
+    const [selectedLanguage, setSelectedLanguage] = useState();
+    const navigation = useNavigation();
+
     const [state, setState] = useState({
-        email: '',
+        type: '',
         emailError: false,
         password: '',
         passwordError: false,
@@ -21,8 +26,6 @@ export default function SignUpScreen({ navigation }) {
         emptyFieldError: '',
         signUpSuccessful: false
     });
-
-    const auth = getAuth(app);
 
     function handleChange(e, name) {
         setState({
@@ -68,9 +71,8 @@ export default function SignUpScreen({ navigation }) {
         }
 
         try {
-            await createUserWithEmailAndPassword(auth, state.email, state.password);
             // Insert a user into the User's database
-            const db = getDatabase();
+            const db = getDatabase(app);
             const usersRef = ref(db, 'users/');
             push(usersRef, {
                 email: state.email,
@@ -84,21 +86,14 @@ export default function SignUpScreen({ navigation }) {
                 signUpSuccessful: true,
             });
         } catch (error) {
-            if (error.code === 'auth/email-already-in-use') {
-                setState({
-                    ...state,
-                    emailAlreadyUsedError: true,
-                });
-            } else {
-                console.log(error);
-            }
+            console.log(error);
         }
     }
 
     return (
         <View style={styles.inputFormContainer}>
             <View style={styles.headerWrapper}>
-                <Text style={styles.headerText}>Sign Up</Text>
+                <Text style={styles.headerText}>Create a New Public Challenge</Text>
             </View>
             {state.signUpSuccessful
                 ? (
@@ -117,14 +112,21 @@ export default function SignUpScreen({ navigation }) {
                 )
                 : (
                     <View style={styles.signInFields}>
-                        <View style={styles.textInputWrapper}>
-                            <TextInput
-                                style={styles.textInput}
-                                placeholder='Email'
-                                value={state.email}
-                                onChangeText={(e) => handleChange(e, 'email')}
-                            />
-                        </View>
+                        <Picker
+                            selectedValue={selectedLanguage}
+                            onValueChange={(itemValue) => setSelectedLanguage(itemValue)}
+                            style={styles.pickerStyle}
+                        >
+                            <Picker.Item label="--- Select ---" value="" />
+                            {/* There is a bug related to mapping with a picker unfortunately: */}
+                            {/* https://github.com/GeekyAnts/NativeBase/issues/983 */}
+                            {/* {challengeKeys.map((type) => { */}
+                            {/*    console.log(challengeTypes[type]) */}
+                            {/*    return <Picker.Item label={challengeTypes[type].name}
+                             * value={challengeTypes[type].id} key={challengeTypes[type].id} /> */}
+                            {/*    })}; */}
+                        </Picker>
+                        {/* </View> */}
                         <View style={styles.textInputWrapper}>
                             <TextInput
                                 style={styles.textInput}
@@ -182,7 +184,8 @@ const styles = StyleSheet.create({
         marginBottom: 100
     },
     headerText: {
-        fontSize: 40
+        fontSize: 40,
+        textAlign: 'center'
     },
     inputFormContainer: {
         flex: 1,
@@ -228,5 +231,8 @@ const styles = StyleSheet.create({
     },
     accountCreatedContainer: {
         alignItems: 'center'
+    },
+    pickerStyle: {
+        width: '100%'
     }
 });

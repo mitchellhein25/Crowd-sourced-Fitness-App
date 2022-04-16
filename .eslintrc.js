@@ -33,7 +33,9 @@ module.exports = {
         'react/jsx-indent-props': ['error', 4],
         'import/no-mutable-exports': 0,
         'global-require': 0,
-        'jsx-quotes': 0
+        'jsx-quotes': 0,
+        'react/no-children-prop': 0,
+        'no-shadow': 0
 
     },
     globals: {
