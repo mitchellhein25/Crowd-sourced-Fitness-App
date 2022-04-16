@@ -9,7 +9,7 @@ import {
 import app from '../../firebase';
 import {
     primaryColor, secondaryColor, white
-} from '../../assets/globalStyles';
+} from '../utils/globalStyles';
 
 export default function AccountScreen({ user }) {
 
