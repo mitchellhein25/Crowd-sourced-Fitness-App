@@ -2,7 +2,7 @@ import React from 'react';
 import renderer, { act } from 'react-test-renderer';
 import { render, fireEvent } from '@testing-library/react-native';
 import LandingPage from '../../src/screens/landingPage';
-import { testAccountEmail, testAccountPass } from '../../assets/testVariables'
+import { testAccountEmail } from '../../src/utils/testVariables'
 
 describe('<LandingPage /> rendering', () => {
 

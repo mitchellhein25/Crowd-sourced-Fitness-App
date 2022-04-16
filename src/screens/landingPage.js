@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild
 } from 'firebase/database';
-// The AsyncStorage warning is reference in App.js
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { getReactNativePersistence } from 'firebase/compat/auth/react-native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import {
     StyleSheet, Text, TextInput, View, Button
@@ -12,7 +9,7 @@ import {
 import app from '../../firebase';
 import {
     primaryColor, white, black
-} from '../../assets/globalStyles';
+} from '../utils/globalStyles';
 
 export default function LandingPage({ navigation }) {
     const [state, setState] = useState({
@@ -24,7 +21,7 @@ export default function LandingPage({ navigation }) {
         userNotFoundError: false,
         wrongPasswordError: false
     });
-    // const auth = getAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
+
     const auth = getAuth(app);
     const db = getDatabase();
 

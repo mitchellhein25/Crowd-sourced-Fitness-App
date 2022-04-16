@@ -4,7 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import AccountScreen from './accountScreen';
 import ActiveChallenges from './activeChallenges';
 import ChallengeSearch from './challengeSearch';
-import { accentColor, white } from '../../assets/globalStyles';
+import { accentColor, white } from '../utils/globalStyles';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +40,10 @@ export default function MainAppView({ route }) {
                 tabBarInactiveBackgroundColor: white,
             })}
         >
-            <Tab.Screen name={challengeSearchScreenName} component={ChallengeSearch} />
+            <Tab.Screen
+                name={challengeSearchScreenName}
+                children={() => <ChallengeSearch user={user} />}
+            />
             <Tab.Screen name={activeChallengesScreenName} component={ActiveChallenges} />
             <Tab.Screen name={accountScreenName} children={() => <AccountScreen user={user} />} />
         </Tab.Navigator>
