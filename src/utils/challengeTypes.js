@@ -7,7 +7,7 @@ class ChallengeType {
     }
 }
 
-const challengeTypes = {
+export const challengeTypes = {
     WeightLifting: new ChallengeType('WEIGHTLIFTING', 'Weight Lifting'),
     Running: new ChallengeType('RUNNING', 'Running'),
     HIIT: new ChallengeType('HIIT', 'HIIT'),
@@ -17,5 +17,3 @@ const challengeTypes = {
     Nutrition: new ChallengeType('NUTRITION', 'Nutrition'),
     Weightloss: new ChallengeType('WEIGHTLOSS', 'Weight Loss')
 };
-
-export default challengeTypes;

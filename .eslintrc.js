@@ -35,7 +35,9 @@ module.exports = {
         'global-require': 0,
         'jsx-quotes': 0,
         'react/no-children-prop': 0,
-        'no-shadow': 0
+        'no-shadow': 0,
+        'import/prefer-default-export': 0,
+        'prefer-destructuring': 0
 
     },
     globals: {

@@ -1,40 +1,29 @@
 import React, { useState } from 'react';
 import { getDatabase, ref, push } from 'firebase/database';
 import { useNavigation } from '@react-navigation/native';
-// import { Picker } from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import {
-    StyleSheet, Text, TextInput, View, Button, Picker
+    StyleSheet, Text, TextInput, View, Button
 } from 'react-native';
 import app from '../../firebase';
 import {
-    primaryColor, white, black, accentColor
+    white, black, accentColor
 } from '../utils/globalStyles';
-// import { challengeTypes } from '../../src/utils/challengeTypes';
+import { challengeTypes } from '../utils/challengeTypes';
 
 export default function AddNewChallenge() {
-    const [selectedLanguage, setSelectedLanguage] = useState();
     const navigation = useNavigation();
-
     const [state, setState] = useState({
         type: '',
-        emailError: false,
-        password: '',
-        passwordError: false,
-        firstName: '',
-        lastName: '',
-        emailAlreadyUsedError: false,
-        emptyFieldError: '',
-        signUpSuccessful: false
+        description: '',
+        goalInput: '',
+        goals: []
     });
 
     function handleChange(e, name) {
         setState({
             ...state,
             [name]: e,
-            emailError: false,
-            passwordError: false,
-            emailAlreadyUsedError: false,
-            emptyFieldError: false
         });
     }
 
@@ -90,6 +79,16 @@ export default function AddNewChallenge() {
         }
     }
 
+    const getPickerItem = (item) => {
+        return (
+            <Picker.Item
+                label={challengeTypes[item].name}
+                value={challengeTypes[item].id}
+                key={challengeTypes[item].id}
+            />
+        );
+    };
+
     return (
         <View style={styles.inputFormContainer}>
             <View style={styles.headerWrapper}>
@@ -112,12 +111,21 @@ export default function AddNewChallenge() {
                 )
                 : (
                     <View style={styles.signInFields}>
+                        <Text style={styles.labelText}>Type:</Text>
                         <Picker
-                            selectedValue={selectedLanguage}
-                            onValueChange={(itemValue) => setSelectedLanguage(itemValue)}
+                            selectedValue={state.type}
+                            onValueChange={(e) => handleChange(e, 'type')}
                             style={styles.pickerStyle}
                         >
-                            <Picker.Item label="--- Select ---" value="" />
+                            <Picker.Item label='--- Select ---' value='' />
+                            {getPickerItem('WeightLifting')}
+                            {getPickerItem('Running')}
+                            {getPickerItem('HIIT')}
+                            {getPickerItem('Yoga')}
+                            {getPickerItem('Cycling')}
+                            {getPickerItem('Rowing')}
+                            {getPickerItem('Nutrition')}
+                            {getPickerItem('Weightloss')}
                             {/* There is a bug related to mapping with a picker unfortunately: */}
                             {/* https://github.com/GeekyAnts/NativeBase/issues/983 */}
                             {/* {challengeKeys.map((type) => { */}
@@ -126,48 +134,53 @@ export default function AddNewChallenge() {
                              * value={challengeTypes[type].id} key={challengeTypes[type].id} /> */}
                             {/*    })}; */}
                         </Picker>
-                        {/* </View> */}
-                        <View style={styles.textInputWrapper}>
-                            <TextInput
-                                style={styles.textInput}
-                                placeholder='First Name'
-                                value={state.firstName}
-                                onChangeText={(e) => handleChange(e, 'firstName')}
-                            />
+                        <View style={styles.inputLabelWrapper}>
+                            <Text style={styles.labelText}>Description:</Text>
+                            <View style={styles.descriptionInputWrapper}>
+                                <TextInput
+                                    style={styles.descriptionTextInput}
+                                    value={state.description}
+                                    onChangeText={(e) => handleChange(e, 'description')}
+                                />
+                            </View>
                         </View>
-                        <View style={styles.textInputWrapper}>
-                            <TextInput
-                                style={styles.textInput}
-                                placeholder='Last Name'
-                                value={state.lastName}
-                                onChangeText={(e) => handleChange(e, 'lastName')}
-                            />
+                        <View style={styles.inputLabelWrapper}>
+                            <Text style={styles.labelText}>Goals:</Text>
+                            <View style={styles.goalInputWrapper}>
+                                <TextInput
+                                    style={styles.goalTextInput}
+                                    value={state.goalInput}
+                                    onChangeText={(e) => handleChange(e, 'goalInput')}
+                                />
+                                <View style={styles.goalButtonWrapper}>
+                                    <Button
+                                        title='Add Goal'
+                                        accessibilityLabel='Add goal button'
+                                        color={black}
+                                        onPress={() => {
+                                            const goals = state.goals;
+                                            if (state.goalInput !== '') {
+                                                goals.push(state.goalInput);
+                                            }
+                                            setState({
+                                                ...state,
+                                                goals,
+                                                goalInput: ''
+                                            });
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                            <View>
+                                {state.goals.map((goal) => {
+                                    return (<Text style={styles.goalText}>{goal}</Text>);
+                                })}
+                            </View>
                         </View>
-                        <View style={styles.textInputWrapper}>
-                            <TextInput
-                                style={styles.textInput}
-                                placeholder='Password'
-                                value={state.password}
-                                onChangeText={(e) => handleChange(e, 'password')}
-                            />
-                        </View>
-                        {state.emailError
-                            ? <Text>Please enter a valid email address.</Text>
-                            : null}
-                        {state.passwordError
-                            ? <Text>Password must be at least 6 characters.</Text>
-                            : null}
-                        {state.emailAlreadyUsedError
-                            ? <Text>That email has already been used to create an account.</Text>
-                            : null}
-                        {state.emptyFieldError
-                            ? <Text>Please fill out all fields.</Text>
-                            : null}
                         <View style={styles.signInButtonWrapper}>
                             <Button
-                                style={styles.signInButton}
-                                title='Create Account'
-                                accessibilityLabel='Create Account button'
+                                title='Create Challenge'
+                                accessibilityLabel='Create Challenge button'
                                 color={white}
                                 onPress={(e) => onSubmit(e)}
                             />
@@ -180,8 +193,7 @@ export default function AddNewChallenge() {
 
 const styles = StyleSheet.create({
     headerWrapper: {
-        marginTop: 100,
-        marginBottom: 100
+        marginTop: 100
     },
     headerText: {
         fontSize: 40,
@@ -192,23 +204,51 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: '100%',
-        backgroundColor: primaryColor
+        backgroundColor: white
     },
-    textInput: {
-        textAlign: 'center',
+    descriptionTextInput: {
+        display: 'flex',
+        textAlign: 'left',
+        alignContent: 'flex-start',
+        padding: 0,
         height: '100%',
         width: '100%',
         borderWidth: 2,
         borderRadius: 5,
+        fontSize: 15
     },
-    textInputWrapper: {
+    goalTextInput: {
+        display: 'flex',
+        textAlign: 'left',
+        padding: 0,
+        height: '100%',
+        width: '60%',
+        borderWidth: 2,
+        borderRadius: 5,
+        fontSize: 15,
+    },
+    descriptionInputWrapper: {
         backgroundColor: white,
-        width: '80%',
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '90%',
+        height: 80,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
         margin: 5,
         borderRadius: 5,
+    },
+    goalInputWrapper: {
+        backgroundColor: white,
+        width: '100%',
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        margin: 5,
+        borderRadius: 5,
+        flexDirection: 'row'
+    },
+    inputLabelWrapper: {
+        width: '100%',
+        alignItems: 'center',
     },
     signInFields: {
         width: '100%',
@@ -219,6 +259,10 @@ const styles = StyleSheet.create({
         width: 200,
         backgroundColor: black
     },
+    goalButtonWrapper: {
+        width: '30%',
+        height: 40
+    },
     accountCreated: {
         textAlign: 'center',
         fontSize: 20,
@@ -228,11 +272,25 @@ const styles = StyleSheet.create({
         margin: 5,
         width: 200,
         backgroundColor: accentColor,
+        flex: 1
     },
     accountCreatedContainer: {
         alignItems: 'center'
     },
     pickerStyle: {
+        width: '100%',
+        backgroundColor: white,
+        margin: 0,
+        padding: 0
+    },
+    labelText: {
+        fontSize: 25,
+        margin: 0,
+        paddingLeft: 20,
+        textAlign: 'left',
         width: '100%'
+    },
+    goalText: {
+        fontSize: 20
     }
 });
