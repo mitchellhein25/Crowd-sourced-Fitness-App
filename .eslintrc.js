@@ -37,7 +37,8 @@ module.exports = {
         'react/no-children-prop': 0,
         'no-shadow': 0,
         'import/prefer-default-export': 0,
-        'prefer-destructuring': 0
+        'prefer-destructuring': 0,
+        'react/no-array-index-key': 0
 
     },
     globals: {
