@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
 import { getDatabase, ref, push } from 'firebase/database';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
+import SelectBox from 'react-native-multi-selectbox';
+import TagInput from 'react-native-tags-input';
+import { xorBy } from 'lodash';
 import {
-    StyleSheet, Text, TextInput, View, Button
+    StyleSheet, Text, TextInput, View, Button, KeyboardAvoidingView
 } from 'react-native';
 import app from '../../firebase';
 import {
-    white, black, accentColor
+    white, black
 } from '../utils/globalStyles';
 import { challengeTypes } from '../utils/challengeTypes';
+import { challengeBadges } from '../utils/challengeBadges';
 
 export default function AddNewChallenge() {
     const navigation = useNavigation();
     const [state, setState] = useState({
-        type: '',
         description: '',
-        goalInput: '',
-        goals: []
+        goalsInput: '',
+        goals: [],
+        tags: {
+            tag: '',
+            tagsArray: []
+        },
+        successfulCreation: false
     });
+    const [badges, setBadges] = useState([]);
+    const [type, setType] = useState({});
 
     function handleChange(e, name) {
         setState({
@@ -27,171 +36,203 @@ export default function AddNewChallenge() {
         });
     }
 
-    async function onSubmit() {
-        let emailError = false;
-        let passwordError = false;
-        let emptyFieldError = false;
-
-        if (state.email === '' || state.password === '' || state.firstName === '' || state.lastName === '') {
-            emptyFieldError = true;
-            setState({
-                ...state,
-                emptyFieldError
+    function pushToRelationshipTable(name, challengeKey, db) {
+        let list;
+        switch (name) {
+        case 'tags':
+            list = state.tags.tagsArray;
+            break;
+        case 'goals':
+            list = state.goals;
+            break;
+        case 'badges':
+            list = badges;
+            break;
+        default:
+            break;
+        }
+        const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+        const reference = ref(db, `${name}/`);
+        list.forEach((item) => {
+            let itemVal = item;
+            if (name === 'badges') {
+                itemVal = item.id;
+            }
+            const link = push(reference, {
+                description: itemVal,
             });
-            return;
-        }
-        // Validate Email address
-        const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/i;
-        if (!emailRegex.test(state.email)) {
-            emailError = true;
-        }
-        if (state.password.length < 6) {
-            passwordError = true;
-        }
-
-        setState({
-            ...state,
-            emailError,
-            passwordError,
+            const key = link.key;
+            const relationshipRef = ref(db, `challenge${capitalizedName}/`);
+            push(relationshipRef, {
+                challengeIdentifier: challengeKey,
+                [`${name}Identifier`]: key,
+            });
         });
+    }
 
-        if (emailError || passwordError) {
-            return;
-        }
+    async function onSubmit() {
 
         try {
-            // Insert a user into the User's database
+            // Insert a challenge into the Challenges database
             const db = getDatabase(app);
-            const usersRef = ref(db, 'users/');
-            push(usersRef, {
-                email: state.email,
-                firstName: state.firstName,
-                lastName: state.lastName,
-                password: state.password,
-                profilePic: ''
+            const challengesRef = ref(db, 'challenges/');
+            const challenge = push(challengesRef, {
+                description: state.description,
+                type: type.id
             });
+            const challengeKey = challenge.key;
+            pushToRelationshipTable('goals', challengeKey, db);
+            pushToRelationshipTable('tags', challengeKey, db);
+            pushToRelationshipTable('badges', challengeKey, db);
             setState({
                 ...state,
-                signUpSuccessful: true,
+                successfulCreation: true,
             });
         } catch (error) {
             console.log(error);
         }
     }
 
-    const getPickerItem = (item) => {
-        return (
-            <Picker.Item
-                label={challengeTypes[item].name}
-                value={challengeTypes[item].id}
-                key={challengeTypes[item].id}
-            />
-        );
-    };
+    async function addGoal(name) {
+        const goal = state[name];
+        const inputName = `${name} + 'Input'`;
+        if (state[inputName] !== '') {
+            goal.push(state[inputName]);
+        }
+        await setState({
+            ...state,
+            [name]: goal,
+            [inputName]: ''
+        });
+    }
+
+    function onMultiChange() {
+        return (item) => setBadges(xorBy(badges, [item], 'id'));
+    }
+
+    function onChange() {
+        return (val) => setType(val);
+    }
 
     return (
-        <View style={styles.inputFormContainer}>
-            <View style={styles.headerWrapper}>
-                <Text style={styles.headerText}>Create a New Public Challenge</Text>
-            </View>
-            {state.signUpSuccessful
-                ? (
-                    <View style={styles.accountCreatedContainer}>
-                        <Text style={styles.accountCreated}>Account successfully created.</Text>
-                        <View style={styles.backToSignInButtonWrapper}>
-                            <Button
-                                style={styles.backToSignInButton}
-                                title='Back to sign in page'
-                                accessibilityLabel='Back to sign in button'
-                                color={white}
-                                onPress={() => navigation.goBack()}
-                            />
-                        </View>
-                    </View>
-                )
-                : (
-                    <View style={styles.signInFields}>
-                        <Text style={styles.labelText}>Type:</Text>
-                        <Picker
-                            selectedValue={state.type}
-                            onValueChange={(e) => handleChange(e, 'type')}
-                            style={styles.pickerStyle}
-                        >
-                            <Picker.Item label='--- Select ---' value='' />
-                            {getPickerItem('WeightLifting')}
-                            {getPickerItem('Running')}
-                            {getPickerItem('HIIT')}
-                            {getPickerItem('Yoga')}
-                            {getPickerItem('Cycling')}
-                            {getPickerItem('Rowing')}
-                            {getPickerItem('Nutrition')}
-                            {getPickerItem('Weightloss')}
-                            {/* There is a bug related to mapping with a picker unfortunately: */}
-                            {/* https://github.com/GeekyAnts/NativeBase/issues/983 */}
-                            {/* {challengeKeys.map((type) => { */}
-                            {/*    console.log(challengeTypes[type]) */}
-                            {/*    return <Picker.Item label={challengeTypes[type].name}
-                             * value={challengeTypes[type].id} key={challengeTypes[type].id} /> */}
-                            {/*    })}; */}
-                        </Picker>
-                        <View style={styles.inputLabelWrapper}>
-                            <Text style={styles.labelText}>Description:</Text>
-                            <View style={styles.descriptionInputWrapper}>
-                                <TextInput
-                                    style={styles.descriptionTextInput}
-                                    value={state.description}
-                                    onChangeText={(e) => handleChange(e, 'description')}
+        <KeyboardAvoidingView behavior="height" style={styles.container}>
+            <View style={styles.inputFormContainer}>
+                <View style={styles.headerWrapper}>
+                    <Text style={styles.headerText}>Create a New Public Challenge</Text>
+                </View>
+                {state.successfulCreation
+                    ? (
+                        <View style={styles.accountCreatedContainer}>
+                            <Text style={styles.accountCreated}>
+                                Challenge successfully created.
+                            </Text>
+                            <View style={styles.backToLastButtonWrapper}>
+                                <Button
+                                    style={styles.backToLastButton}
+                                    title='Back to Challenge Search Page.'
+                                    accessibilityLabel='Back to Challenge Search Page button'
+                                    color={white}
+                                    onPress={() => navigation.goBack()}
                                 />
                             </View>
                         </View>
-                        <View style={styles.inputLabelWrapper}>
-                            <Text style={styles.labelText}>Goals:</Text>
-                            <View style={styles.goalInputWrapper}>
-                                <TextInput
-                                    style={styles.goalTextInput}
-                                    value={state.goalInput}
-                                    onChangeText={(e) => handleChange(e, 'goalInput')}
-                                />
-                                <View style={styles.goalButtonWrapper}>
-                                    <Button
-                                        title='Add Goal'
-                                        accessibilityLabel='Add goal button'
-                                        color={black}
-                                        onPress={() => {
-                                            const goals = state.goals;
-                                            if (state.goalInput !== '') {
-                                                goals.push(state.goalInput);
-                                            }
-                                            setState({
-                                                ...state,
-                                                goals,
-                                                goalInput: ''
-                                            });
-                                        }}
+                    )
+                    : (
+                        <View style={styles.signInFields}>
+                            <Text style={styles.labelText}>Type:</Text>
+                            <SelectBox
+                                labelStyle={styles.selectBoxLabelStyle}
+                                options={challengeTypes}
+                                value={type}
+                                onChange={onChange()}
+                                hideInputFilter={false}
+                                width='90%'
+                            />
+                            <View style={styles.inputLabelWrapper}>
+                                <Text style={styles.labelText}>Description:</Text>
+                                <View style={styles.descriptionInputWrapper}>
+                                    <TextInput
+                                        style={styles.descriptionTextInput}
+                                        value={state.description}
+                                        onChangeText={(e) => handleChange(e, 'description')}
                                     />
                                 </View>
                             </View>
-                            <View>
-                                {state.goals.map((goal) => {
-                                    return (<Text style={styles.goalText}>{goal}</Text>);
-                                })}
+                            <View style={styles.inputLabelWrapper}>
+                                <Text style={styles.labelText}>Goals:</Text>
+                                <View style={styles.goalInputWrapper}>
+                                    <TextInput
+                                        style={styles.goalInput}
+                                        value={state.goalsInput}
+                                        onChangeText={(e) => handleChange(e, 'goalsInput')}
+                                    />
+                                    <View style={styles.goalButtonWrapper}>
+                                        <Button
+                                            title='Add Goal'
+                                            accessibilityLabel='Add goal button'
+                                            color={black}
+                                            onPress={() => { addGoal('goals'); }}
+                                        />
+                                    </View>
+                                </View>
+                                <View>
+                                    {state.goals.map((goal, index) => {
+                                        return (
+                                            <Text style={styles.goalText} key={index}>
+                                                {goal}
+                                            </Text>
+                                        );
+                                    })}
+                                </View>
+                            </View>
+                            <View style={styles.inputLabelWrapper}>
+                                <Text style={styles.labelText}>Badges:</Text>
+                                <SelectBox
+                                    style={styles.badgeSelectBox}
+                                    labelStyle={styles.selectBoxLabelStyle}
+                                    options={challengeBadges}
+                                    selectedValues={badges}
+                                    onMultiSelect={onMultiChange()}
+                                    onTapClose={onMultiChange()}
+                                    width='90%'
+                                    isMulti
+                                />
+                            </View>
+                            <View style={styles.inputLabelWrapper}>
+                                <Text style={styles.labelText}>Tags:</Text>
+                                <View style={styles.tagInputWrapper}>
+                                    <TagInput
+                                        updateState={(e) => { setState({ ...state, tags: e }); }}
+                                        tags={state.tags}
+                                        label='Press space to add a tag'
+                                        labelStyle={styles.tagInputLabelStyle}
+                                        inputContainerStyle={styles.tagInputContainerStyle}
+                                        autoCorrect={false}
+                                        tagStyle={styles.tag}
+                                    />
+                                </View>
+                            </View>
+                            <View style={styles.createChallengeButtonWrapper}>
+                                <Button
+                                    title='Create Challenge'
+                                    accessibilityLabel='Create Challenge button'
+                                    color={white}
+                                    onPress={(e) => onSubmit(e)}
+                                />
                             </View>
                         </View>
-                        <View style={styles.signInButtonWrapper}>
-                            <Button
-                                title='Create Challenge'
-                                accessibilityLabel='Create Challenge button'
-                                color={white}
-                                onPress={(e) => onSubmit(e)}
-                            />
-                        </View>
-                    </View>
-                )}
-        </View>
+                    )}
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
+const lightGreyColor = '#f2f2f2';
 const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        flex: 1
+    },
     headerWrapper: {
         marginTop: 100
     },
@@ -217,7 +258,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         fontSize: 15
     },
-    goalTextInput: {
+    goalInput: {
         display: 'flex',
         textAlign: 'left',
         padding: 0,
@@ -246,6 +287,14 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         flexDirection: 'row'
     },
+    tagInputWrapper: {
+        width: '95%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    tag: {
+        backgroundColor: white
+    },
     inputLabelWrapper: {
         width: '100%',
         alignItems: 'center',
@@ -254,7 +303,7 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
     },
-    signInButtonWrapper: {
+    createChallengeButtonWrapper: {
         margin: 5,
         width: 200,
         backgroundColor: black
@@ -268,20 +317,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 20
     },
-    backToSignInButtonWrapper: {
-        margin: 5,
-        width: 200,
-        backgroundColor: accentColor,
-        flex: 1
-    },
     accountCreatedContainer: {
         alignItems: 'center'
-    },
-    pickerStyle: {
-        width: '100%',
-        backgroundColor: white,
-        margin: 0,
-        padding: 0
     },
     labelText: {
         fontSize: 25,
@@ -292,5 +329,15 @@ const styles = StyleSheet.create({
     },
     goalText: {
         fontSize: 20
+    },
+    selectBoxLabelStyle: {
+        display: 'none'
+    },
+    tagInputLabelStyle: {
+        color: black,
+        paddingBottom: 10
+    },
+    tagInputContainerStyle: {
+        backgroundColor: lightGreyColor
     }
 });
