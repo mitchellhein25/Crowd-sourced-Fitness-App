@@ -5,11 +5,11 @@ import SelectBox from 'react-native-multi-selectbox';
 import TagInput from 'react-native-tags-input';
 import { xorBy } from 'lodash';
 import {
-    StyleSheet, Text, TextInput, View, Button, KeyboardAvoidingView
+    StyleSheet, Text, TextInput, View, Button
 } from 'react-native';
 import app from '../../firebase';
 import {
-    white, black
+    white, black, primaryColor
 } from '../utils/globalStyles';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
@@ -24,7 +24,8 @@ export default function AddNewChallenge() {
             tag: '',
             tagsArray: []
         },
-        successfulCreation: false
+        successfulCreation: false,
+        emptyFieldError: false
     });
     const [badges, setBadges] = useState([]);
     const [type, setType] = useState({});
@@ -33,6 +34,7 @@ export default function AddNewChallenge() {
         setState({
             ...state,
             [name]: e,
+            emptyFieldError: false
         });
     }
 
@@ -72,13 +74,22 @@ export default function AddNewChallenge() {
 
     async function onSubmit() {
 
+        if (state.tags.tagsArray === [] || state.goals === [] || badges === []
+            || state.description === '' || type === {}) {
+            state.emptyFieldError = true;
+            return;
+        }
+
         try {
             // Insert a challenge into the Challenges database
+            const date = new Date();
+            const formattedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}Z`;
             const db = getDatabase(app);
             const challengesRef = ref(db, 'challenges/');
             const challenge = push(challengesRef, {
                 description: state.description,
-                type: type.id
+                type: type.id,
+                date: formattedDate
             });
             const challengeKey = challenge.key;
             pushToRelationshipTable('goals', challengeKey, db);
@@ -93,16 +104,15 @@ export default function AddNewChallenge() {
         }
     }
 
-    async function addGoal(name) {
-        const goal = state[name];
-        const inputName = `${name} + 'Input'`;
-        if (state[inputName] !== '') {
-            goal.push(state[inputName]);
+    async function addGoal() {
+        const goal = state.goals;
+        if (state.goalsInput !== '') {
+            goal.push(state.goalsInput);
         }
         await setState({
             ...state,
-            [name]: goal,
-            [inputName]: ''
+            goals: goal,
+            goalsInput: ''
         });
     }
 
@@ -115,124 +125,123 @@ export default function AddNewChallenge() {
     }
 
     return (
-        <KeyboardAvoidingView behavior="height" style={styles.container}>
-            <View style={styles.inputFormContainer}>
-                <View style={styles.headerWrapper}>
-                    <Text style={styles.headerText}>Create a New Public Challenge</Text>
-                </View>
-                {state.successfulCreation
-                    ? (
-                        <View style={styles.accountCreatedContainer}>
-                            <Text style={styles.accountCreated}>
-                                Challenge successfully created.
-                            </Text>
-                            <View style={styles.backToLastButtonWrapper}>
-                                <Button
-                                    style={styles.backToLastButton}
-                                    title='Back to Challenge Search Page.'
-                                    accessibilityLabel='Back to Challenge Search Page button'
-                                    color={white}
-                                    onPress={() => navigation.goBack()}
-                                />
-                            </View>
-                        </View>
-                    )
-                    : (
-                        <View style={styles.signInFields}>
-                            <Text style={styles.labelText}>Type:</Text>
-                            <SelectBox
-                                labelStyle={styles.selectBoxLabelStyle}
-                                options={challengeTypes}
-                                value={type}
-                                onChange={onChange()}
-                                hideInputFilter={false}
-                                width='90%'
-                            />
-                            <View style={styles.inputLabelWrapper}>
-                                <Text style={styles.labelText}>Description:</Text>
-                                <View style={styles.descriptionInputWrapper}>
-                                    <TextInput
-                                        style={styles.descriptionTextInput}
-                                        value={state.description}
-                                        onChangeText={(e) => handleChange(e, 'description')}
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.inputLabelWrapper}>
-                                <Text style={styles.labelText}>Goals:</Text>
-                                <View style={styles.goalInputWrapper}>
-                                    <TextInput
-                                        style={styles.goalInput}
-                                        value={state.goalsInput}
-                                        onChangeText={(e) => handleChange(e, 'goalsInput')}
-                                    />
-                                    <View style={styles.goalButtonWrapper}>
-                                        <Button
-                                            title='Add Goal'
-                                            accessibilityLabel='Add goal button'
-                                            color={black}
-                                            onPress={() => { addGoal('goals'); }}
-                                        />
-                                    </View>
-                                </View>
-                                <View>
-                                    {state.goals.map((goal, index) => {
-                                        return (
-                                            <Text style={styles.goalText} key={index}>
-                                                {goal}
-                                            </Text>
-                                        );
-                                    })}
-                                </View>
-                            </View>
-                            <View style={styles.inputLabelWrapper}>
-                                <Text style={styles.labelText}>Badges:</Text>
-                                <SelectBox
-                                    style={styles.badgeSelectBox}
-                                    labelStyle={styles.selectBoxLabelStyle}
-                                    options={challengeBadges}
-                                    selectedValues={badges}
-                                    onMultiSelect={onMultiChange()}
-                                    onTapClose={onMultiChange()}
-                                    width='90%'
-                                    isMulti
-                                />
-                            </View>
-                            <View style={styles.inputLabelWrapper}>
-                                <Text style={styles.labelText}>Tags:</Text>
-                                <View style={styles.tagInputWrapper}>
-                                    <TagInput
-                                        updateState={(e) => { setState({ ...state, tags: e }); }}
-                                        tags={state.tags}
-                                        label='Press space to add a tag'
-                                        labelStyle={styles.tagInputLabelStyle}
-                                        inputContainerStyle={styles.tagInputContainerStyle}
-                                        autoCorrect={false}
-                                        tagStyle={styles.tag}
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.createChallengeButtonWrapper}>
-                                <Button
-                                    title='Create Challenge'
-                                    accessibilityLabel='Create Challenge button'
-                                    color={white}
-                                    onPress={(e) => onSubmit(e)}
-                                />
-                            </View>
-                        </View>
-                    )}
+        // <KeyboardAvoidingView behavior='height' style={styles.container}>
+        <View style={styles.inputFormContainer}>
+            <View style={styles.headerWrapper}>
+                <Text style={styles.headerText}>Create a New Public Challenge</Text>
             </View>
-        </KeyboardAvoidingView>
+            {state.successfulCreation
+                ? (
+                    <View style={styles.accountCreatedContainer}>
+                        <Text style={styles.accountCreated}>
+                            Challenge successfully created.
+                        </Text>
+                        <View style={styles.backToLastButtonWrapper}>
+                            <Button
+                                style={styles.backToLastButton}
+                                title='Back to Challenge Search Page.'
+                                accessibilityLabel='Back to Challenge Search Page button'
+                                color={black}
+                                onPress={() => navigation.goBack()}
+                            />
+                        </View>
+                    </View>
+                )
+                : (
+                    <View style={styles.signInFields}>
+                        <Text style={styles.labelText}>Type:</Text>
+                        <SelectBox
+                            labelStyle={styles.selectBoxLabelStyle}
+                            options={challengeTypes}
+                            value={type}
+                            onChange={onChange()}
+                            hideInputFilter={false}
+                            width='90%'
+                        />
+                        <View style={styles.inputLabelWrapper}>
+                            <Text style={styles.labelText}>Description:</Text>
+                            <View style={styles.descriptionInputWrapper}>
+                                <TextInput
+                                    style={styles.descriptionTextInput}
+                                    value={state.description}
+                                    onChangeText={(e) => handleChange(e, 'description')}
+                                />
+                            </View>
+                        </View>
+                        <View style={styles.inputLabelWrapper}>
+                            <Text style={styles.labelText}>Goals:</Text>
+                            <View style={styles.goalInputWrapper}>
+                                <TextInput
+                                    style={styles.goalInput}
+                                    value={state.goalsInput}
+                                    onChangeText={(e) => handleChange(e, 'goalsInput')}
+                                />
+                                <View style={styles.goalButtonWrapper}>
+                                    <Button
+                                        title='Add Goal'
+                                        accessibilityLabel='Add goal button'
+                                        color={black}
+                                        onPress={() => { addGoal(); }}
+                                    />
+                                </View>
+                            </View>
+                            <View>
+                                {state.goals.map((goal, index) => {
+                                    return (
+                                        <Text style={styles.goalText} key={index}>
+                                            {goal}
+                                        </Text>
+                                    );
+                                })}
+                            </View>
+                        </View>
+                        <View style={styles.inputLabelWrapper}>
+                            <Text style={styles.labelText}>Badges:</Text>
+                            <SelectBox
+                                style={styles.badgeSelectBox}
+                                labelStyle={styles.selectBoxLabelStyle}
+                                options={challengeBadges}
+                                selectedValues={badges}
+                                onMultiSelect={onMultiChange()}
+                                onTapClose={onMultiChange()}
+                                width='90%'
+                                isMulti
+                            />
+                        </View>
+                        <View style={styles.inputLabelWrapper}>
+                            <Text style={styles.labelText}>Tags:</Text>
+                            <View style={styles.tagInputWrapper}>
+                                <TagInput
+                                    updateState={(e) => { setState({ ...state, tags: e }); }}
+                                    tags={state.tags}
+                                    label='Press space to add a tag'
+                                    labelStyle={styles.tagInputLabelStyle}
+                                    inputContainerStyle={styles.tagInputContainerStyle}
+                                    autoCorrect={false}
+                                    tagStyle={styles.tag}
+                                />
+                            </View>
+                        </View>
+                        {state.emptyFieldError
+                            ? <Text style={styles.errorText}>Please fill out all fields.</Text>
+                            : null }
+                        <View style={styles.createChallengeButtonWrapper}>
+                            <Button
+                                title='Create Challenge'
+                                accessibilityLabel='Create Challenge button'
+                                color={white}
+                                onPress={(e) => onSubmit(e)}
+                            />
+                        </View>
+                    </View>
+                )}
+        </View>
+        // </KeyboardAvoidingView>
     );
 }
 
 const lightGreyColor = '#f2f2f2';
 const styles = StyleSheet.create({
-    container: {
-        height: '100%',
-        flex: 1
-    },
     headerWrapper: {
         marginTop: 100
     },
@@ -339,5 +348,8 @@ const styles = StyleSheet.create({
     },
     tagInputContainerStyle: {
         backgroundColor: lightGreyColor
+    },
+    errorText: {
+        color: primaryColor
     }
 });
