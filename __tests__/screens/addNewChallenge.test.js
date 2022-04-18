@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
 import { NavigationContainer } from '@react-navigation/native';
-import AddNewChallenge from '../../src/screens/AddNewChallenge';
+import AddNewChallenge from '../../src/screens/addNewChallenge';
 
 describe('<AddNewChallenge /> load', () => {
     it('has 1 child', () => {
