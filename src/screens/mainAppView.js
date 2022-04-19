@@ -42,7 +42,7 @@ export default function MainAppView({ route }) {
         >
             <Tab.Screen
                 name={challengeSearchScreenName}
-                children={() => <ChallengeSearch user={user} />}
+                children={() => <ChallengeSearch />}
             />
             <Tab.Screen name={activeChallengesScreenName} component={ActiveChallenges} />
             <Tab.Screen name={accountScreenName} children={() => <AccountScreen user={user} />} />

@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import MainAppView from '../../src/screens/mainAppView';
 
 describe('<MainAppView /> load', () => {
-    jest.useFakeTimers()
     it('has 2 children', async () => {
         const tree = await renderer.create(<NavigationContainer><MainAppView route={{}}/></NavigationContainer>).toJSON();
         expect(tree.children.length).toBe(2);
