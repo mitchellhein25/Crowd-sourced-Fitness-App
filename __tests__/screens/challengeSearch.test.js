@@ -10,7 +10,7 @@ describe('<ChallengeSearch /> load', () => {
                 <ChallengeSearch />
             </NavigationContainer>
         ).toJSON();
-        expect(tree.children.length).toBe(2);
+        expect(tree.children.length).toBe(3);
     });
 
     it('renders correctly', async () => {

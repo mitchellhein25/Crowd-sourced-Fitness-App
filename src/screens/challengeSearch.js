@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
-    StyleSheet, View, Text, Button, FlatList
+    StyleSheet, View, Text, Button, FlatList, TouchableOpacity
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -8,16 +8,16 @@ import {
 } from 'firebase/database';
 import app from '../../firebase';
 import { challengeTypes } from '../utils/challengeTypes';
-import { challengeBadges } from '../utils/challengeBadges';
-import { white, primaryColor, black } from '../utils/globalStyles';
+// import { challengeBadges } from '../utils/challengeBadges';
+import { white, primaryColor } from '../utils/globalStyles';
 
 export default function ChallengeSearch() {
     const navigation = useNavigation();
-    const [state, setState] = useState({
-        challengeList: []
-    });
+    // const [state, setState] = useState({
+    //    challengeList: []
+    // });
 
-    useEffect(() => {
+    const getList = () => {
         const db = getDatabase(app);
         const challengesRef = ref(db, 'challenges/');
         const challenge = query(challengesRef);
@@ -68,15 +68,19 @@ export default function ChallengeSearch() {
                 });
             });
         });
+        return list;
+        // setState({
+        //    ...state,
+        //    challengeList: list
+        // });
+    };
 
-        setState({
-            ...state,
-            challengeList: list
-        });
-    }, []);
+    // useEffect(() => {
+    // }, []);
 
     return (
         <View style={styles.container}>
+            <Text style={styles.header}>Find a Challenge</Text>
             <View style={styles.addNewButtonWrapper}>
                 <Button
                     title='Create a New Public Challenge'
@@ -86,22 +90,23 @@ export default function ChallengeSearch() {
                 />
             </View>
             <FlatList
-                data={state.challengeList}
+                data={getList()}
                 keyExtractor={(key) => {
                     return key.id;
                 }}
                 renderItem={({ item }) => (
-                    <View style={styles.listItemWrapper} key={item.id}>
-                        <Text style={styles.item}>{item.description}</Text>
+                    <TouchableOpacity style={styles.listItemWrapper} key={item.id} onPress={() => navigation.navigate('Challenge Detail', { challenge: item })}>
+                        <Text style={styles.description}>{item.description}</Text>
                         <Text style={styles.item}>
+                            <Text style={styles.bold}>Type:&nbsp;</Text>
                             {challengeTypes.find((x) => x.id === item.type).item}
                         </Text>
+                        {/* <Text style={styles.item}> */}
+                        {/*    Created: */}
+                        {/*    {item.date} */}
+                        {/* </Text> */}
                         <Text style={styles.item}>
-                            Created:
-                            {item.date}
-                        </Text>
-                        <Text style={styles.item}>
-                            Goals:&nbsp;
+                            <Text style={styles.bold}>Goals:&nbsp;</Text>
                             {item.goals.map((goal, index) => {
                                 return (
                                     <Text key={goal}>
@@ -111,19 +116,19 @@ export default function ChallengeSearch() {
                                 );
                             })}
                         </Text>
+                        {/* <Text style={styles.item}> */}
+                        {/*    Badges:&nbsp; */}
+                        {/*    {item.badges.map((badge, index) => { */}
+                        {/*        return ( */}
+                        {/*            <Text key={badge}> */}
+                        {/*                {challengeBadges.find((x) => x.id === badge).item} */}
+                        {/*                {index < item.badges.length - 1 ? ', ' : ''} */}
+                        {/*            </Text> */}
+                        {/*        ); */}
+                        {/*    })} */}
+                        {/* </Text> */}
                         <Text style={styles.item}>
-                            Badges:&nbsp;
-                            {item.badges.map((badge, index) => {
-                                return (
-                                    <Text key={badge}>
-                                        {challengeBadges.find((x) => x.id === badge).item}
-                                        {index < item.badges.length - 1 ? ', ' : ''}
-                                    </Text>
-                                );
-                            })}
-                        </Text>
-                        <Text style={styles.item}>
-                            Tags:&nbsp;
+                            <Text style={styles.bold}>Tags:&nbsp;</Text>
                             {item.tags.map((tag, index) => {
                                 return (
                                     <Text key={tag}>
@@ -133,7 +138,7 @@ export default function ChallengeSearch() {
                                 );
                             })}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>
@@ -141,6 +146,11 @@ export default function ChallengeSearch() {
 }
 
 const styles = StyleSheet.create({
+    header: {
+        fontSize: 30,
+        marginBottom: 20,
+        fontWeight: '500'
+    },
     container: {
         flex: 1,
         backgroundColor: white,
@@ -152,14 +162,36 @@ const styles = StyleSheet.create({
         backgroundColor: primaryColor,
         borderRadius: 30,
         padding: 10,
-        shadowColor: black,
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.75,
-        shadowRadius: 3
+        // shadowColor: black,
+        // shadowOffset: {
+        //    width: 1,
+        //    height: 1
+        // },
+        // shadowOpacity: 0.75,
+        // shadowRadius: 3,
+        marginBottom: 20
     },
     listItemWrapper: {
         padding: 20,
         paddingLeft: 10,
-        margin: 10
+        margin: 10,
+        borderWidth: 1,
+        borderRadius: 10,
+        shadowRadius: 1,
+        shadowOpacity: 0.5,
+        shadowOffset: {
+            width: 1,
+            height: 1
+        },
+        backgroundColor: white
+    },
+    description: {
+        fontSize: 20,
+        fontWeight: '500',
+        shadowOpacity: 0,
+        marginBottom: 10
+    },
+    bold: {
+        fontWeight: '600'
     }
 });

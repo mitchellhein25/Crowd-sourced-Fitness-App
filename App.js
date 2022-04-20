@@ -6,6 +6,7 @@ import LandingPage from './src/screens/landingPage';
 import SignUpScreen from './src/screens/signUpScreen';
 import MainAppView from './src/screens/mainAppView';
 import AddNewChallenge from './src/screens/addNewChallenge';
+import ChallengeDetail from './src/screens/challengeDetail';
 import { black, white } from './src/utils/globalStyles';
 import './firebase';
 
@@ -35,6 +36,7 @@ export default function App() {
                 <Stack.Screen name="Sign-Up Screen" component={SignUpScreen} />
                 <Stack.Screen name="Main App View" component={MainAppView} />
                 <Stack.Screen name="Add New Challenge" component={AddNewChallenge} />
+                <Stack.Screen name="Challenge Detail" component={ChallengeDetail} />
             </Stack.Navigator>
         </NavigationContainer>
     );

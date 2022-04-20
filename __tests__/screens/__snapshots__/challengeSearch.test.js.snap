@@ -12,19 +12,24 @@ exports[`<ChallengeSearch /> load renders correctly 1`] = `
     }
   }
 >
+  <Text
+    style={
+      Object {
+        "fontSize": 30,
+        "fontWeight": "500",
+        "marginBottom": 20,
+      }
+    }
+  >
+    Find a Challenge
+  </Text>
   <View
     style={
       Object {
         "backgroundColor": "rgb(212, 0, 0)",
         "borderRadius": 30,
+        "marginBottom": 20,
         "padding": 10,
-        "shadowColor": "black",
-        "shadowOffset": Object {
-          "height": 1,
-          "width": 1,
-        },
-        "shadowOpacity": 0.75,
-        "shadowRadius": 3,
       }
     }
   >
