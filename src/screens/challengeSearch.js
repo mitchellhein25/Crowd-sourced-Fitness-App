@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet, View, Text, Button, FlatList, TouchableOpacity
 } from 'react-native';
@@ -9,13 +9,13 @@ import {
 import app from '../../firebase';
 import { challengeTypes } from '../utils/challengeTypes';
 // import { challengeBadges } from '../utils/challengeBadges';
-import { white, primaryColor } from '../utils/globalStyles';
+import { white, primaryColor, accentColor } from '../utils/globalStyles';
 
-export default function ChallengeSearch() {
+export default function ChallengeSearch({ user }) {
     const navigation = useNavigation();
-    // const [state, setState] = useState({
-    //    challengeList: []
-    // });
+    const [state] = useState({
+        id: user ? Object.keys(user)[0] : 'no user logged in',
+    });
 
     const getList = () => {
         const db = getDatabase(app);
@@ -95,7 +95,11 @@ export default function ChallengeSearch() {
                     return key.id;
                 }}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.listItemWrapper} key={item.id} onPress={() => navigation.navigate('Challenge Detail', { challenge: item })}>
+                    <TouchableOpacity
+                        style={styles.listItemWrapper}
+                        key={item.id}
+                        onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id })}
+                    >
                         <Text style={styles.description}>{item.description}</Text>
                         <Text style={styles.item}>
                             <Text style={styles.bold}>Type:&nbsp;</Text>
@@ -175,7 +179,8 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingLeft: 10,
         margin: 10,
-        borderWidth: 1,
+        backgroundColor: accentColor,
+        // borderWidth: 1,
         borderRadius: 10,
         shadowRadius: 1,
         shadowOpacity: 0.5,
@@ -183,15 +188,18 @@ const styles = StyleSheet.create({
             width: 1,
             height: 1
         },
-        backgroundColor: white
     },
     description: {
         fontSize: 20,
         fontWeight: '500',
         shadowOpacity: 0,
-        marginBottom: 10
+        marginBottom: 10,
+        color: white
     },
     bold: {
         fontWeight: '600'
+    },
+    item: {
+        color: white
     }
 });

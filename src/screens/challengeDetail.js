@@ -1,15 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text
+    StyleSheet, View, Text, Button
 } from 'react-native';
+import {
+    getDatabase, ref, get, equalTo, query, orderByChild, push
+} from 'firebase/database';
+import app from '../../firebase';
 // import { useNavigation } from '@react-navigation/native';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
-import { white } from '../utils/globalStyles';
+import { white, black } from '../utils/globalStyles';
 
 export default function ChallengeDetail({ route }) {
     // const navigation = useNavigation();
-    const { challenge } = route.params ? route.params : {};
+    const [state, setState] = useState({
+        isActiveForUser: false
+    });
+    const { challenge, userId } = route.params ? route.params : {};
+    const db = getDatabase(app);
+
+    const getIfActive = async () => {
+        const challengeUsersRef = ref(db, 'challengeUsers/');
+        const challengeUserRecords = await get(query(challengeUsersRef, orderByChild('userIdentifier'), equalTo(userId)));
+        const challengeUserRecordsJson = challengeUserRecords.toJSON();
+        Object.keys(challengeUserRecordsJson).ForEach((key) => {
+            if (challengeUserRecordsJson[key].challengeIdentifier === challenge.id) {
+                setState({
+                    ...state,
+                    isActiveForUser: true
+                });
+            }
+        });
+    };
+
+    const addToActive = () => {
+        try {
+            const challengeUsersRef = ref(db, 'challengeUsers/');
+            push(challengeUsersRef, {
+                challengeIdentifier: challenge.id,
+                userIdentifier: userId
+            });
+            setState({
+                ...state,
+                isActiveForUser: true
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getIfActive();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -54,6 +96,22 @@ export default function ChallengeDetail({ route }) {
                     );
                 })}
             </Text>
+            {state.isActiveForUser
+                ? (
+                    <Text style={styles.item}>
+                        You are actively participating in this challenge!
+                    </Text>
+                )
+                : (
+                    <View style={styles.buttonWrapper}>
+                        <Button
+                            title='Join this Challenge'
+                            color={black}
+                            accessibilityLabel='Join this Challenge button'
+                            onPress={() => { addToActive(); }}
+                        />
+                    </View>
+                )}
         </View>
     );
 }
@@ -84,4 +142,11 @@ const styles = StyleSheet.create({
     detail: {
         fontSize: 22,
     },
+    buttonWrapper: {
+        width: '80%',
+        alignSelf: 'center',
+        marginTop: 20,
+        borderWidth: 1,
+        borderRadius: 20
+    }
 });
