@@ -11,7 +11,7 @@ import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
 import { white, black } from '../utils/globalStyles';
 
-export default function ChallengeDetail({ route }) {
+export default function ChallengeDetail({ navigation, route }) {
     // const navigation = useNavigation();
     const [state, setState] = useState({
         isActiveForUser: false
@@ -51,9 +51,11 @@ export default function ChallengeDetail({ route }) {
 
     useEffect(() => {
         getIfActive();
+
     }, []);
 
-    return (
+    return (<React.Fragment>
+
         <View style={styles.container}>
             <Text style={styles.description}>{challenge.description}</Text>
             <Text style={styles.item}>
@@ -110,10 +112,17 @@ export default function ChallengeDetail({ route }) {
                             accessibilityLabel='Join this Challenge button'
                             onPress={() => { addToActive(); }}
                         />
-                    </View>
+                    </View>, <View style={styles.buttonWrapper}>
+                                                    <Button
+                                                        title='Back'
+                                                        color={black}
+
+                                                        onPress={() => { navigation.goBack()}}
+                                                    />
+                                                </View>
                 )}
         </View>
-    );
+   </React.Fragment> );
 }
 
 const styles = StyleSheet.create({

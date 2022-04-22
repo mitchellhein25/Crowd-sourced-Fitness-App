@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, push } from 'firebase/database';
 import { useNavigation } from '@react-navigation/native';
 import SelectBox from 'react-native-multi-selectbox';
@@ -15,7 +15,28 @@ import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
 
 export default function AddNewChallenge() {
-    const navigation = useNavigation();
+const navigation = useNavigation();
+ useEffect(
+    () =>
+      navigation.addListener('beforeRemove', event => {
+        // Prevent default behavior
+        event.preventDefault();
+
+        Alert.alert(
+          'Discard',
+          'Are you sure you want to discard this?',
+          [
+            {text: 'No', style: 'cancel', onPress: () => {}},
+            {
+              text: 'Yes',
+              style: 'destructive',
+              onPress: () => navigation.dispatch(event.data.action),
+            },
+          ],
+        );
+      }),
+    [navigation],
+  );
     const [state, setState] = useState({
         description: '',
         goalsInput: '',
@@ -125,11 +146,22 @@ export default function AddNewChallenge() {
     }
 
     return (
-        // <KeyboardAvoidingView behavior='height' style={styles.container}>
+//    <React.Fragment>
+<Div>
+    <View style={styles.destructive}>
+                                                    <Button
+                                                        style={styles.backToLastButton}
+                                                        title='Back.'
+                                                        accessibilityLabel='Back'
+                                                        color={black}
+                                                        onPress={() => navigation.goBack()}
+                                                    />
+                                                </View>
         <View style={styles.inputFormContainer}>
             <View style={styles.headerWrapper}>
                 <Text style={styles.headerText}>Create a New Public Challenge</Text>
             </View>
+
             {state.successfulCreation
                 ? (
                     <View style={styles.accountCreatedContainer}>
@@ -145,6 +177,7 @@ export default function AddNewChallenge() {
                                 onPress={() => navigation.goBack()}
                             />
                         </View>
+
                     </View>
                 )
                 : (
@@ -235,8 +268,17 @@ export default function AddNewChallenge() {
                         </View>
                     </View>
                 )}
-        </View>
-        // </KeyboardAvoidingView>
+        </View></Div>
+//         <View style={styles.buttonWrapper}>
+//         <Button
+//                                   title='Back'
+//                                                                color={black}
+//
+//                                                                onPress={() => { navigation.goBack()}}
+//                                                            />
+//                                                        </View>
+//                                                        </React.Fragment>
+
     );
 }
 
