@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import {
     StyleSheet, View, Text, Button, Image, TextInput
 } from 'react-native';
 import {
-    getDatabase, ref, update
+    getDatabase, ref as refDatabase, update
 } from 'firebase/database';
+import {
+    getStorage, ref as refStorage, uploadBytes, getDownloadURL
+} from 'firebase/storage';
 import app from '../../firebase';
 import {
     primaryColor, secondaryColor, white
@@ -19,15 +22,47 @@ export default function AccountScreen({ user }) {
         lastName: user ? Object.values(user)[0].lastName : 'no user logged in',
         password: user ? Object.values(user)[0].password : 'no user logged in',
         id: user ? Object.keys(user)[0] : 'no user logged in',
-        profilePic: user ? Object.values(user)[0].profilePic : '',
+        profilePic: '',
         editFirstName: false,
         editLastName: false,
         editEmail: false,
         editPassword: false
     });
 
+    useEffect(() => {
+        async function getImage() {
+            if (user) {
+                const profileImagePath = await getProfileImage(Object.values(user)[0].profilePic);
+                setState({
+                    ...state,
+                    profilePic: profileImagePath
+                });
+            }
+        }
+        getImage();
+
+    }, []);
+
+    // Retrieve profile pic from Firestore
+    function getProfileImage(imagePath) {
+        const storage = getStorage(app);
+        return getDownloadURL(refStorage(storage, imagePath))
+            .then((url) => {
+                return url;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     const pickImage = async () => {
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const permission = await ImagePicker.getMediaLibraryPermissionsAsync();
+        if (!permission.granted) {
+            const permissionRequest = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (!permissionRequest.granted) {
+                return;
+            }
+        }
 
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -36,19 +71,43 @@ export default function AccountScreen({ user }) {
             quality: 1,
         });
 
+        // https://dev.to/emmbyiringiro/upload-image-with-expo-and-firebase-cloud-storage-3481
+        // Convert image to blob for Firebase storage
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function () {
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', result.uri, true);
+            xhr.send(null);
+        });
+
         await setState({
             ...state,
             profilePic: result.uri
         });
         try {
+            // Save image to Firebase Storage
+            const imgName = `img-${new Date().getTime()}`;
+            const storage = getStorage(app);
+            const imagesRef = refStorage(storage, `images/${imgName}`);
+            let imagePath = '';
+            await uploadBytes(imagesRef, blob).then((snapshot) => {
+                imagePath = snapshot.metadata.fullPath;
+            });
+            // Save user to databse with new image
             const db = getDatabase(app);
-            const userRef = ref(db, `users/${state.id}`);
+            const userRef = refDatabase(db, `users/${state.id}`);
             update(userRef, {
                 email: state.email,
                 firstName: state.firstName,
                 lastName: state.lastName,
                 password: state.password,
-                profilePic: state.profilePic
+                profilePic: imagePath
             });
         } catch (error) {
             console.log(error);
@@ -65,7 +124,7 @@ export default function AccountScreen({ user }) {
     const updateAccountInfo = async (e, name) => {
         try {
             const db = getDatabase(app);
-            const userRef = ref(db, `users/${state.id}`);
+            const userRef = refDatabase(db, `users/${state.id}`);
             update(userRef, {
                 email: state.email,
                 firstName: state.firstName,
