@@ -15,14 +15,15 @@ exports[`<AddNewChallenge /> load renders correctly 1`] = `
   <View
     style={
       Object {
-        "marginTop": 100,
+        "marginTop": 50,
       }
     }
   >
     <Text
       style={
         Object {
-          "fontSize": 40,
+          "fontSize": 20,
+          "fontWeight": "600",
           "textAlign": "center",
         }
       }
@@ -41,7 +42,7 @@ exports[`<AddNewChallenge /> load renders correctly 1`] = `
     <Text
       style={
         Object {
-          "fontSize": 25,
+          "fontSize": 15,
           "margin": 0,
           "paddingLeft": 20,
           "textAlign": "left",
@@ -226,7 +227,7 @@ exports[`<AddNewChallenge /> load renders correctly 1`] = `
       <Text
         style={
           Object {
-            "fontSize": 25,
+            "fontSize": 15,
             "margin": 0,
             "paddingLeft": 20,
             "textAlign": "left",
@@ -282,7 +283,7 @@ exports[`<AddNewChallenge /> load renders correctly 1`] = `
       <Text
         style={
           Object {
-            "fontSize": 25,
+            "fontSize": 15,
             "margin": 0,
             "paddingLeft": 20,
             "textAlign": "left",
@@ -290,7 +291,7 @@ exports[`<AddNewChallenge /> load renders correctly 1`] = `
           }
         }
       >
-        Goals:
+        Goals (3 goals Max):
       </Text>
       <View
         style={
@@ -393,7 +394,7 @@ exports[`<AddNewChallenge /> load renders correctly 1`] = `
       <Text
         style={
           Object {
-            "fontSize": 25,
+            "fontSize": 15,
             "margin": 0,
             "paddingLeft": 20,
             "textAlign": "left",
@@ -615,7 +616,7 @@ exports[`<AddNewChallenge /> load renders correctly 1`] = `
       <Text
         style={
           Object {
-            "fontSize": 25,
+            "fontSize": 15,
             "margin": 0,
             "paddingLeft": 20,
             "textAlign": "left",

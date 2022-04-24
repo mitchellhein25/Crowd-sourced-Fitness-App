@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, push } from 'firebase/database';
 import { useNavigation } from '@react-navigation/native';
 import SelectBox from 'react-native-multi-selectbox';
 import TagInput from 'react-native-tags-input';
 import { xorBy } from 'lodash';
 import {
-    StyleSheet, Text, TextInput, View, Button
+    StyleSheet, Text, TextInput, View, Button,
 } from 'react-native';
 import app from '../../firebase';
 import {
@@ -25,7 +25,7 @@ export default function AddNewChallenge() {
             tagsArray: []
         },
         successfulCreation: false,
-        emptyFieldError: false
+        emptyFieldError: false,
     });
     const [badges, setBadges] = useState([]);
     const [type, setType] = useState({});
@@ -76,7 +76,10 @@ export default function AddNewChallenge() {
 
         if (state.tags.tagsArray === [] || state.goals === [] || badges === []
             || state.description === '' || type === {}) {
-            state.emptyFieldError = true;
+            setState({
+                ...state,
+                emptyFieldError: true,
+            });
             return;
         }
 
@@ -116,6 +119,17 @@ export default function AddNewChallenge() {
         });
     }
 
+    async function removeGoal(index) {
+        const newGoals = state.goals;
+        newGoals.splice(index, 1);
+        await setState({
+            ...state,
+            goals: newGoals,
+        });
+    }
+    useEffect(() => {
+    }, [state.goals, state.emptyFieldError]);
+
     function onMultiChange() {
         return (item) => setBadges(xorBy(badges, [item], 'id'));
     }
@@ -124,8 +138,25 @@ export default function AddNewChallenge() {
         return (val) => setType(val);
     }
 
+    function showGoals() {
+        return state.goals.map((goal, index) => {
+            return (
+                <View key={index} style={styles.goal}>
+                    <Text style={styles.goalText}>
+                        {goal}
+                    </Text>
+                    <Button
+                        title='x'
+                        accessibilityLabel='Remove goal button'
+                        color={black}
+                        onPress={() => { removeGoal(index); }}
+                    />
+                </View>
+            );
+        });
+    }
+
     return (
-        // <KeyboardAvoidingView behavior='height' style={styles.container}>
         <View style={styles.inputFormContainer}>
             <View style={styles.headerWrapper}>
                 <Text style={styles.headerText}>Create a New Public Challenge</Text>
@@ -169,7 +200,7 @@ export default function AddNewChallenge() {
                             </View>
                         </View>
                         <View style={styles.inputLabelWrapper}>
-                            <Text style={styles.labelText}>Goals:</Text>
+                            <Text style={styles.labelText}>Goals (3 goals Max):</Text>
                             <View style={styles.goalInputWrapper}>
                                 <TextInput
                                     style={styles.goalInput}
@@ -177,22 +208,20 @@ export default function AddNewChallenge() {
                                     onChangeText={(e) => handleChange(e, 'goalsInput')}
                                 />
                                 <View style={styles.goalButtonWrapper}>
-                                    <Button
-                                        title='Add Goal'
-                                        accessibilityLabel='Add goal button'
-                                        color={black}
-                                        onPress={() => { addGoal(); }}
-                                    />
+                                    {state.goals.length < 3
+                                        ? (
+                                            <Button
+                                                title='Add Goal'
+                                                accessibilityLabel='Add goal button'
+                                                color={black}
+                                                onPress={() => { addGoal(); }}
+                                            />
+                                        )
+                                        : null }
                                 </View>
                             </View>
                             <View>
-                                {state.goals.map((goal, index) => {
-                                    return (
-                                        <Text style={styles.goalText} key={index}>
-                                            {goal}
-                                        </Text>
-                                    );
-                                })}
+                                {showGoals()}
                             </View>
                         </View>
                         <View style={styles.inputLabelWrapper}>
@@ -236,18 +265,18 @@ export default function AddNewChallenge() {
                     </View>
                 )}
         </View>
-        // </KeyboardAvoidingView>
     );
 }
 
 const lightGreyColor = '#f2f2f2';
 const styles = StyleSheet.create({
     headerWrapper: {
-        marginTop: 100
+        marginTop: 50
     },
     headerText: {
-        fontSize: 40,
-        textAlign: 'center'
+        fontSize: 20,
+        textAlign: 'center',
+        fontWeight: '600'
     },
     inputFormContainer: {
         flex: 1,
@@ -276,6 +305,9 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 5,
         fontSize: 15,
+    },
+    goal: {
+        flexDirection: 'row'
     },
     descriptionInputWrapper: {
         backgroundColor: white,
@@ -330,14 +362,15 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     labelText: {
-        fontSize: 25,
+        fontSize: 15,
         margin: 0,
         paddingLeft: 20,
         textAlign: 'left',
         width: '100%'
     },
     goalText: {
-        fontSize: 20
+        fontSize: 15,
+        marginTop: 12
     },
     selectBoxLabelStyle: {
         display: 'none'
