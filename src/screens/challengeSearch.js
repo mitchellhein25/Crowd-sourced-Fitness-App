@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     StyleSheet, View, Text, Button, FlatList, TouchableOpacity
 } from 'react-native';
@@ -6,15 +6,18 @@ import { useNavigation } from '@react-navigation/native';
 import {
     getDatabase, ref, onValue, query, orderByChild, equalTo
 } from 'firebase/database';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
 import { challengeTypes } from '../utils/challengeTypes';
 // import { challengeBadges } from '../utils/challengeBadges';
-import { white, primaryColor, accentColor } from '../utils/globalStyles';
+import { white, primaryColor, secondaryColorDarker } from '../utils/globalStyles';
 
 export default function ChallengeSearch({ user }) {
     const navigation = useNavigation();
-    const [state] = useState({
+    const [state, setState] = useState({
         id: user ? Object.keys(user)[0] : 'no user logged in',
+        list: [],
+        showList: false
     });
 
     const getList = () => {
@@ -69,14 +72,14 @@ export default function ChallengeSearch({ user }) {
             });
         });
         return list;
-        // setState({
-        //    ...state,
-        //    challengeList: list
-        // });
     };
 
-    // useEffect(() => {
-    // }, []);
+    useEffect(() => {
+        setState({
+            ...state,
+            list: getList()
+        });
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -89,62 +92,63 @@ export default function ChallengeSearch({ user }) {
                     onPress={() => navigation.navigate('Add New Challenge', {})}
                 />
             </View>
-            <FlatList
-                data={getList()}
-                keyExtractor={(key) => {
-                    return key.id;
-                }}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={styles.listItemWrapper}
-                        key={item.id}
-                        onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id })}
-                    >
-                        <Text style={styles.description}>{item.description}</Text>
-                        <Text style={styles.item}>
-                            <Text style={styles.bold}>Type:&nbsp;</Text>
-                            {challengeTypes.find((x) => x.id === item.type).item}
-                        </Text>
-                        {/* <Text style={styles.item}> */}
-                        {/*    Created: */}
-                        {/*    {item.date} */}
-                        {/* </Text> */}
-                        <Text style={styles.item}>
-                            <Text style={styles.bold}>Goals:&nbsp;</Text>
-                            {item.goals.map((goal, index) => {
-                                return (
-                                    <Text key={goal}>
-                                        {goal}
-                                        {index < item.goals.length - 1 ? ', ' : ''}
-                                    </Text>
-                                );
-                            })}
-                        </Text>
-                        {/* <Text style={styles.item}> */}
-                        {/*    Badges:&nbsp; */}
-                        {/*    {item.badges.map((badge, index) => { */}
-                        {/*        return ( */}
-                        {/*            <Text key={badge}> */}
-                        {/*                {challengeBadges.find((x) => x.id === badge).item} */}
-                        {/*                {index < item.badges.length - 1 ? ', ' : ''} */}
-                        {/*            </Text> */}
-                        {/*        ); */}
-                        {/*    })} */}
-                        {/* </Text> */}
-                        <Text style={styles.item}>
-                            <Text style={styles.bold}>Tags:&nbsp;</Text>
-                            {item.tags.map((tag, index) => {
-                                return (
-                                    <Text key={tag}>
-                                        {tag}
-                                        {index < item.tags.length - 1 ? ', ' : ''}
-                                    </Text>
-                                );
-                            })}
-                        </Text>
+            {state.showList
+                ? (
+                    <FlatList
+                        data={state.list}
+                        keyExtractor={(key) => {
+                            return key.id;
+                        }}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={styles.listItemWrapper}
+                                key={item.id}
+                                onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id })}
+                            >
+                                <Text style={styles.description}>{item.description}</Text>
+                                <Text style={styles.item}>
+                                    <Text style={styles.bold}>Type:&nbsp;</Text>
+                                    {challengeTypes.find((x) => x.id === item.type).item}
+                                </Text>
+                                {/* <Text style={styles.item}> */}
+                                {/*    Created: */}
+                                {/*    {item.date} */}
+                                {/* </Text> */}
+                                <Text style={styles.item}>
+                                    <Text style={styles.bold}>Goals:&nbsp;</Text>
+                                    {item.goals.map((goal, index) => {
+                                        return (
+                                            <Text key={goal}>
+                                                {goal}
+                                                {index < item.goals.length - 1 ? ', ' : ''}
+                                            </Text>
+                                        );
+                                    })}
+                                </Text>
+                                <Text style={styles.item}>
+                                    <Text style={styles.bold}>Tags:&nbsp;</Text>
+                                    {item.tags.map((tag, index) => {
+                                        return (
+                                            <Text key={tag}>
+                                                {tag}
+                                                {index < item.tags.length - 1 ? ', ' : ''}
+                                            </Text>
+                                        );
+                                    })}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                ) : (
+                    <TouchableOpacity onPress={() => setState({ ...state, showList: true })}>
+                        <Button
+                            title='Show Available Challenges'
+                            color={primaryColor}
+                            accessibilityLabel='See Available Challenges button'
+                        />
+                        <Ionicons name='arrow-down-outline' color={primaryColor} size={30} style={styles.icon} />
                     </TouchableOpacity>
                 )}
-            />
         </View>
     );
 }
@@ -166,21 +170,13 @@ const styles = StyleSheet.create({
         backgroundColor: primaryColor,
         borderRadius: 30,
         padding: 10,
-        // shadowColor: black,
-        // shadowOffset: {
-        //    width: 1,
-        //    height: 1
-        // },
-        // shadowOpacity: 0.75,
-        // shadowRadius: 3,
         marginBottom: 20
     },
     listItemWrapper: {
         padding: 20,
         paddingLeft: 10,
         margin: 10,
-        backgroundColor: accentColor,
-        // borderWidth: 1,
+        backgroundColor: secondaryColorDarker,
         borderRadius: 10,
         shadowRadius: 1,
         shadowOpacity: 0.5,
@@ -201,5 +197,8 @@ const styles = StyleSheet.create({
     },
     item: {
         color: white
-    }
+    },
+    icon: {
+        alignSelf: 'center'
+    },
 });

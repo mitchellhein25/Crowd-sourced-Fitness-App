@@ -11,7 +11,7 @@ describe('<LandingPage /> rendering', () => {
     });
 
     it('has 3 children', () => {
-        expect(tree.children.length).toBe(3);
+        expect(tree.children.length).toBe(2);
     });
 
     it('renders correctly', async () => {

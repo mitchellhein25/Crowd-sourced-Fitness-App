@@ -6,6 +6,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import {
     StyleSheet, Text, TextInput, View, Button
 } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
 import {
     primaryColor, white, black
@@ -89,6 +90,7 @@ export default function LandingPage({ navigation }) {
         <View style={styles.inputFormContainer}>
             <View style={styles.headerWrapper}>
                 <Text style={styles.headerText}>Fitness Challenge App</Text>
+                <Ionicons name='barbell-outline' color={black} size={200} style={styles.icon} />
             </View>
             <View style={styles.signInFields}>
                 <View style={styles.textInputWrapper}>
@@ -143,23 +145,26 @@ export default function LandingPage({ navigation }) {
                     </View>
                 </View>
             </View>
-            <Button
-                style={styles.signUpButton}
-                title='Skip sign in'
-                accessibilityLabel='Skip sign in button'
-                color={black}
-                onPress={() => navigation.navigate('Main App View', {})}
-            />
+            {/* <Button */}
+            {/*    style={styles.signUpButton} */}
+            {/*    title='Skip sign in' */}
+            {/*    accessibilityLabel='Skip sign in button' */}
+            {/*    color={black} */}
+            {/*    onPress={() => navigation.navigate('Main App View', {})} */}
+            {/* /> */}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     headerWrapper: {
-        marginBottom: 100
+        // marginBottom: 100
     },
     headerText: {
         fontSize: 40
+    },
+    icon: {
+        alignSelf: 'center'
     },
     inputFormContainer: {
         flex: 1,
