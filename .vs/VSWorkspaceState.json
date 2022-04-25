@@ -4,9 +4,8 @@
     "\\src",
     "\\src\\screens",
     "\\src\\utils",
-    "\\__tests__",
-    "\\__tests__\\screens"
+    "\\__tests__"
   ],
-  "SelectedNode": "\\package.json",
+  "SelectedNode": "\\src\\screens\\addNewChallenge.js",
   "PreviewInSolutionExplorer": false
 }
