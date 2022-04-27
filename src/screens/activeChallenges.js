@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
-    getDatabase, ref, onValue, query, orderByChild, equalTo, orderByKey, get
+    getDatabase, ref, onValue, query, orderByChild, equalTo, orderByKey
 } from 'firebase/database';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
@@ -23,12 +23,13 @@ export default function ActiveChallenges({ user }) {
         const db = getDatabase(app);
         const challengeUsersRef = ref(db, 'challengeUsers/');
         // Hard coded user key
-        const userChallenges = query(challengeUsersRef, orderByChild('userIdentifier'), equalTo("-N0YbP7d2OEgbYQ6EIAo"));
-        const challengesList = []
+        const userChallenges = query(challengeUsersRef, orderByChild('userIdentifier'), equalTo('-N0YbP7d2OEgbYQ6EIAo'));
+        const challengesList = [];
         onValue(userChallenges, (snapshot0) => {
             snapshot0.forEach((childSnapshot0) => {
                 const challengesRef = ref(db, 'challenges/');
-                const challenges = query(challengesRef, orderByKey(), equalTo(childSnapshot0.val().challengeIdentifier));
+                const challengeIdentifier = childSnapshot0.val().challengeIdentifier;
+                const challenges = query(challengesRef, orderByKey(), equalTo(challengeIdentifier));
                 onValue(challenges, (snapshot) => {
                     snapshot.forEach((childSnapshot) => {
                         const challengeGoalsRef = ref(db, 'challengeGoals/');
@@ -163,12 +164,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingTop: '15%'
-    },
-    addNewButtonWrapper: {
-        backgroundColor: primaryColor,
-        borderRadius: 30,
-        padding: 10,
-        marginBottom: 20
     },
     listItemWrapper: {
         padding: 20,
