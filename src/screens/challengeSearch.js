@@ -84,14 +84,26 @@ export default function ChallengeSearch({ user }) {
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Find a Challenge</Text>
+
             <View style={styles.addNewButtonWrapper}>
                 <Button
                     title='Create a New Public Challenge'
                     color={white}
                     accessibilityLabel='Create a New Public Challenge button'
                     onPress={() => navigation.navigate('Add New Challenge', {})}
-                />
-            </View>
+                /></View>
+                <View style={styles.addNewButtonWrapper}>
+                 <Button
+            style={styles.backToSignInButton}
+            title='Go Back'
+
+            color={white}
+            onPress={() => navigation.goBack()}
+        />
+</View>
+
+
+
             {state.showList
                 ? (
                     <FlatList

@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import AccountScreen from './accountScreen';
 import ActiveChallenges from './activeChallenges';
 import ChallengeSearch from './challengeSearch';
+import Chat from './chatScreen';
 import { accentColor, white } from '../utils/globalStyles';
 
 const Tab = createBottomTabNavigator();
@@ -14,6 +15,7 @@ export default function MainAppView({ route }) {
     const accountScreenName = 'Accounts';
     const activeChallengesScreenName = 'My Challenges';
     const challengeSearchScreenName = 'All Challenges';
+    const chatScreenName = 'Chat'
 
     function tabBarIconFunction(routes, color, size) {
         let iconName;
@@ -24,6 +26,8 @@ export default function MainAppView({ route }) {
             iconName = 'trending-up-outline';
         } else if (routes.name === challengeSearchScreenName) {
             iconName = 'barbell-outline';
+        }else if (routes.name === chatScreenName) {
+             iconName = 'chatbubble-ellipses';
         }
 
         return <Ionicons name={iconName} color={color} size={size} />;
@@ -46,6 +50,7 @@ export default function MainAppView({ route }) {
                 children={() => <ChallengeSearch user={user} />}
             />
             <Tab.Screen name={accountScreenName} children={() => <AccountScreen user={user} />} />
+            <Tab.Screen name={chatScreenName} children={() => <Chat user={user} />} />
         </Tab.Navigator>
     );
 }
