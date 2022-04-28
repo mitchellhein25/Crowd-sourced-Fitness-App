@@ -91,7 +91,9 @@ exports[`<ChallengeSearch /> load renders correctly 1`] = `
     onStartShouldSetResponder={[Function]}
     style={
       Object {
+        "flex": 1,
         "opacity": 1,
+        "padding": 20,
       }
     }
   >

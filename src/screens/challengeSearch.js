@@ -79,7 +79,7 @@ export default function ChallengeSearch({ user }) {
             ...state,
             list: getList()
         });
-    }, []);
+    }, [state.showList]);
 
     return (
         <View style={styles.container}>
@@ -140,11 +140,19 @@ export default function ChallengeSearch({ user }) {
                         )}
                     />
                 ) : (
-                    <TouchableOpacity onPress={() => setState({ ...state, showList: true })}>
+                    <TouchableOpacity
+                        style={styles.loadButton}
+                        onPress={() => {
+                            setState({
+                                ...state, showList: true
+                            });
+                        }}
+                    >
                         <Button
                             title='Show Available Challenges'
                             color={primaryColor}
                             accessibilityLabel='See Available Challenges button'
+                            style={styles.button}
                         />
                         <Ionicons name='arrow-down-outline' color={primaryColor} size={30} style={styles.icon} />
                     </TouchableOpacity>
@@ -201,4 +209,11 @@ const styles = StyleSheet.create({
     icon: {
         alignSelf: 'center'
     },
+    loadButton: {
+        flex: 1,
+        padding: 20
+    },
+    button: {
+        padding: 40
+    }
 });

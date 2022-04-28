@@ -23,14 +23,16 @@ export default function ChallengeDetail({ route }) {
         const challengeUsersRef = ref(db, 'challengeUsers/');
         const challengeUserRecords = await get(query(challengeUsersRef, orderByChild('userIdentifier'), equalTo(userId)));
         const challengeUserRecordsJson = challengeUserRecords.toJSON();
-        Object.keys(challengeUserRecordsJson).forEach((key) => {
-            if (challengeUserRecordsJson[key].challengeIdentifier === challenge.id) {
-                setState({
-                    ...state,
-                    isActiveForUser: true
-                });
-            }
-        });
+        if (challengeUserRecordsJson != null) {
+            Object.keys(challengeUserRecordsJson).forEach((key) => {
+                if (challengeUserRecordsJson[key].challengeIdentifier === challenge.id) {
+                    setState({
+                        ...state,
+                        isActiveForUser: true
+                    });
+                }
+            });
+        }
     };
 
     const addToActive = () => {
