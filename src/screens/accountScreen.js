@@ -15,7 +15,6 @@ import {
 } from '../utils/globalStyles';
 
 export default function AccountScreen({ user }) {
-
     const [state, setState] = useState({
         email: user ? Object.values(user)[0].email : 'no user logged in',
         firstName: user ? Object.values(user)[0].firstName : 'no user logged in',

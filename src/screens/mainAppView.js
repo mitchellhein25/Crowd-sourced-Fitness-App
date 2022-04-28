@@ -9,7 +9,6 @@ import { accentColor, white } from '../utils/globalStyles';
 const Tab = createBottomTabNavigator();
 
 export default function MainAppView({ route }) {
-
     const { user } = route.params ? route.params : {};
     const accountScreenName = 'Accounts';
     const activeChallengesScreenName = 'My Challenges';

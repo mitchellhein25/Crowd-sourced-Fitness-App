@@ -1,11 +1,13 @@
 {
   "ExpandedNodes": [
     "",
+    "\\assets",
     "\\src",
     "\\src\\screens",
     "\\src\\utils",
-    "\\__tests__"
+    "\\__tests__",
+    "\\__tests__\\screens"
   ],
-  "SelectedNode": "\\src\\screens\\addNewChallenge.js",
+  "SelectedNode": "\\__tests__\\screens\\landingPage.test.js",
   "PreviewInSolutionExplorer": false
 }
