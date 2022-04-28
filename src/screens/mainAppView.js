@@ -40,7 +40,10 @@ export default function MainAppView({ route }) {
                 tabBarInactiveBackgroundColor: white,
             })}
         >
-            <Tab.Screen name={activeChallengesScreenName} component={ActiveChallenges} />
+            <Tab.Screen
+                name={activeChallengesScreenName}
+                children={() => <ActiveChallenges user={user} />}
+            />
             <Tab.Screen
                 name={challengeSearchScreenName}
                 children={() => <ChallengeSearch user={user} />}

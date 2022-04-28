@@ -22,8 +22,7 @@ export default function ActiveChallenges({ user }) {
     const getList = () => {
         const db = getDatabase(app);
         const challengeUsersRef = ref(db, 'challengeUsers/');
-        // Hard coded user key
-        const userChallenges = query(challengeUsersRef, orderByChild('userIdentifier'), equalTo('-N0YbP7d2OEgbYQ6EIAo'));
+        const userChallenges = query(challengeUsersRef, orderByChild('userIdentifier'), equalTo(state.id));
         const challengesList = [];
         onValue(userChallenges, (snapshot0) => {
             snapshot0.forEach((childSnapshot0) => {
