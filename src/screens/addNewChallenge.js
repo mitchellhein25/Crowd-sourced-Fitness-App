@@ -263,12 +263,12 @@ export default function AddNewChallenge() {
                             />
                         </View>
                         <View style={styles.createChallengeButtonWrapper}>
-                                                    <Button
-                                                        title='Go Back'
-                                                        color={white}
-                                                        onPress={() => navigation.goBack()}
-                                                    />
-                                                </View>
+                            <Button
+                                title='Go Back'
+                                color={white}
+                                onPress={() => navigation.goBack()}
+                            />
+                        </View>
                     </View>
                 )}
         </View>
