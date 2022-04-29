@@ -11,7 +11,7 @@ import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
 import { white, black } from '../utils/globalStyles';
 
-export default function ChallengeDetail({ route }) {
+export default function ChallengeDetail({ route, navigation }) {
     // const navigation = useNavigation();
     const [state, setState] = useState({
         isActiveForUser: false
@@ -57,6 +57,15 @@ export default function ChallengeDetail({ route }) {
 
     return (
         <View style={styles.container}>
+            <View style={styles.backButtonWrapper}>
+                <Button
+                    style={styles.backToSignInButton}
+                    title='Go Back'
+                    color={white}
+                    onPress={() => navigation.goBack()}
+                />
+
+            </View>
             <Text style={styles.description}>{challenge.description}</Text>
             <Text style={styles.item}>
                 <Text style={styles.bold}>Type:</Text>
@@ -150,5 +159,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
         borderWidth: 1,
         borderRadius: 20
-    }
+    },
+    backButtonWrapper: {
+        margin: 5,
+        width: 200,
+        backgroundColor: black
+    },
 });
