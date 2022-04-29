@@ -89,6 +89,16 @@ export default function ActiveChallenges({ user }) {
 
     return (
         <View style={styles.container}>
+            <View style={styles.backButtonWrapper}>
+                <Button
+                    style={styles.backToSignInButton}
+                    title='Go Back'
+                    color={white}
+                    onPress={() => navigation.navigate('All Challenges')}
+                />
+
+            </View>
+
             <Text style={styles.header}>Active Challenges</Text>
             {state.showList
                 ? (
@@ -192,5 +202,11 @@ const styles = StyleSheet.create({
     },
     icon: {
         alignSelf: 'center'
+    },
+
+    backButtonWrapper: {
+        margin: 5,
+        width: 200,
+        backgroundColor: white
     },
 });
