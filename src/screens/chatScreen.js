@@ -6,22 +6,22 @@ import {
     View, Text, TouchableOpacity
 } from 'react-native';
 import { Avatar } from 'react-native-elements';
-import { signOut } from 'firebase/auth';
+// import { signOut } from 'firebase/auth';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { useNavigation } from '@react-navigation/native';
-import { auth, db } from '../../firebase';
+// import { auth, db } from '../../firebase';
 
 function Chat({ }) {
     const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
-    const signOutNow = () => {
-        signOut(auth).then(() => {
-            // Sign-out successful.
-            navigation.replace('Login');
-        }).catch((error) => {
-            // An error happened.
-        });
-    };
+    // //nst signOutNow = () => {
+    //  //signOut(auth).then(() => {
+    // //     // Sign-out successful.
+    //    //  na}).catch(()place('Logi//);
+    //    }).catch(() => {
+    //        // An error happened.
+    //    });
+    // };
     useLayoutEffect(() => {
         navigation.setOptions({
             // eslint-disable-next-line react/no-unstable-nested-components
@@ -31,7 +31,8 @@ function Chat({ }) {
                     <Avatar
                         rounded
                         source={{
-                            uri: auth?.currentUser?.photoURL,
+                            uri: ''
+                            // uri: auth?.currentUser?.photoURL,
                         }}
                     />
                 </View>
@@ -43,7 +44,8 @@ function Chat({ }) {
                     style={{
                         marginRight: 10
                     }}
-                    onPress={signOutNow}
+                    onPress={() => { }}
+                    // onPress={signOutNow}
                 >
                     <Text>logout</Text>
                 </TouchableOpacity>
@@ -74,9 +76,9 @@ function Chat({ }) {
             showAvatarForEveryMessage
             onSend={(messages) => onSend(messages)}
             user={{
-                _id: auth?.currentUser?.email,
-                name: auth?.currentUser?.displayName,
-                avatar: auth?.currentUser?.photoURL
+                // _id: auth?.currentUser?.email,
+                // name: auth?.currentUser?.displayName,
+                // avatar: auth?.currentUser?.photoURL
             }}
         />
     );
