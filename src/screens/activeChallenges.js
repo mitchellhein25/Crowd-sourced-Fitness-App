@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, FlatList, TouchableOpacity
+    StyleSheet,
+    View,
+    Text,
+    Button,
+    FlatList,
+    TouchableOpacity
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
-    getDatabase, ref, onValue, query, orderByChild, equalTo, orderByKey
+    getDatabase,
+    ref,
+    onValue,
+    query,
+    orderByChild,
+    equalTo,
+    orderByKey
 } from 'firebase/database';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
@@ -89,64 +100,202 @@ export default function ActiveChallenges({ user }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Active Challenges</Text>
-            {state.showList
-                ? (
-                    <FlatList
-                        data={state.list}
-                        keyExtractor={(key) => {
-                            return key.id;
-                        }}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                style={styles.listItemWrapper}
-                                key={item.id}
-                                onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id })}
-                            >
-                                <Text style={styles.description}>{item.description}</Text>
-                                <Text style={styles.item}>
-                                    <Text style={styles.bold}>Type:&nbsp;</Text>
-                                    {challengeTypes.find((x) => x.id === item.type).item}
-                                </Text>
-                                {/* <Text style={styles.item}> */}
-                                {/*    Created: */}
-                                {/*    {item.date} */}
-                                {/* </Text> */}
-                                <Text style={styles.item}>
-                                    <Text style={styles.bold}>Goals:&nbsp;</Text>
-                                    {item.goals.map((goal, index) => {
-                                        return (
-                                            <Text key={goal}>
-                                                {goal}
-                                                {index < item.goals.length - 1 ? ', ' : ''}
+            <View style={styles.backButtonWrapper}>
+                <Button
+                    style={styles.backToSignInButton}
+                    title='Go Back'
+                    color={white}
+                    onPress={
+                        () => navigation.navigate('All Challenges')
+                    }
+                />
+
+            </View>
+
+            <Text style={styles.header}>
+                {' '}
+                { ' ' }
+                Active Challenges
+                {' '}
+                { ' ' }
+                {' '}
+
+            </Text>
+            {' '}
+            { ' ' }
+            {' '}
+            {
+                state.showList
+                    ? (
+                        <FlatList
+                            data={state.list}
+                            keyExtractor={
+                                (key) => {
+                                    return key.id;
+                                }
+                            }
+                            renderItem={
+                                ({ item }) => (
+                                    <TouchableOpacity
+                                        style={styles.listItemWrapper}
+                                        key={item.id}
+                                        onPress={
+                                            () => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id })
+                                        }
+                                    >
+                                        <Text style={styles.description}>
+                                            {' '}
+                                            { ' ' }
+                                            {' '}
+                                            { item.description }
+                                            {' '}
+                                            { ' ' }
+
+                                        </Text>
+                                        {' '}
+                                        { ' ' }
+                                        {' '}
+                                        <Text style={styles.item}>
+                                            <Text style={styles.bold}>
+                                                {' '}
+                                                { ' ' }
+                                                Type: & nbsp;
+                                                {' '}
+                                                { ' ' }
+                                                {' '}
+
                                             </Text>
-                                        );
-                                    })}
-                                </Text>
-                                <Text style={styles.item}>
-                                    <Text style={styles.bold}>Tags:&nbsp;</Text>
-                                    {item.tags.map((tag, index) => {
-                                        return (
-                                            <Text key={tag}>
-                                                {tag}
-                                                {index < item.tags.length - 1 ? ', ' : ''}
+                                            {' '}
+                                            { ' ' }
+                                            {' '}
+                                            { challengeTypes.find((x) => x.id === item.type).item }
+                                            {' '}
+                                            { ' ' }
+
+                                        </Text>
+                                        {' '}
+                                        { ' ' }
+                                        {' '}
+                                        { /* <Text style={styles.item}> */ }
+                                        {' '}
+                                        { ' ' }
+                                        {' '}
+                                        { /*    Created: */ }
+                                        {' '}
+                                        { ' ' }
+                                        {' '}
+                                        { /*    {item.date} */ }
+                                        {' '}
+                                        { ' ' }
+                                        {' '}
+                                        { /* </Text> */ }
+                                        {' '}
+                                        { ' ' }
+                                        {' '}
+                                        <Text style={styles.item}>
+                                            <Text style={styles.bold}>
+                                                {' '}
+                                                { ' ' }
+                                                Goals: & nbsp;
+                                                {' '}
+                                                { ' ' }
+                                                {' '}
+
                                             </Text>
-                                        );
-                                    })}
-                                </Text>
-                            </TouchableOpacity>
-                        )}
-                    />
-                ) : (
-                    <TouchableOpacity onPress={() => setState({ ...state, showList: true })}>
-                        <Button
-                            title='Show Active Challenges'
-                            color={primaryColor}
-                            accessibilityLabel='See Active Challenges button'
+                                            {' '}
+                                            { ' ' }
+                                            {' '}
+                                            {
+                                                item.goals.map((goal, index) => {
+                                                    return (
+                                                        <Text key={goal}>
+                                                            {' '}
+                                                            { ' ' }
+                                                            {' '}
+                                                            { goal }
+                                                            {' '}
+                                                            { ' ' }
+                                                            {' '}
+                                                            { index < item.goals.length - 1 ? ', ' : '' }
+                                                            {' '}
+                                                            { ' ' }
+
+                                                        </Text>
+                                                    );
+                                                })
+                                            }
+                                            {' '}
+                                            { ' ' }
+
+                                        </Text>
+                                        {' '}
+                                        { ' ' }
+                                        {' '}
+                                        <Text style={styles.item}>
+                                            <Text style={styles.bold}>
+                                                {' '}
+                                                { ' ' }
+                                                Tags: & nbsp;
+                                                {' '}
+                                                { ' ' }
+                                                {' '}
+
+                                            </Text>
+                                            {' '}
+                                            { ' ' }
+                                            {' '}
+                                            {
+                                                item.tags.map((tag, index) => {
+                                                    return (
+                                                        <Text key={tag}>
+                                                            {' '}
+                                                            { ' ' }
+                                                            {' '}
+                                                            { tag }
+                                                            {' '}
+                                                            { ' ' }
+                                                            {' '}
+                                                            { index < item.tags.length - 1 ? ', ' : '' }
+                                                            {' '}
+                                                            { ' ' }
+
+                                                        </Text>
+                                                    );
+                                                })
+                                            }
+                                            {' '}
+                                            { ' ' }
+
+                                        </Text>
+                                        {' '}
+                                        { ' ' }
+
+                                    </TouchableOpacity>
+                                )
+                            }
                         />
-                        <Ionicons name='arrow-down-outline' color={primaryColor} size={30} style={styles.icon} />
-                    </TouchableOpacity>
-                )}
+                    ) : (
+                        <TouchableOpacity onPress={
+                            () => setState({ ...state, showList: true })
+                        }
+                        >
+                            <Button
+                                title='Show Active Challenges'
+                                color={primaryColor}
+                                accessibilityLabel='See Active Challenges button'
+                            />
+                            <Ionicons
+                                name='arrow-down-outline'
+                                color={primaryColor}
+                                size={30}
+                                style={styles.icon}
+                            />
+                        </TouchableOpacity>
+                    )
+            }
+            {' '}
+            { ' ' }
+
         </View>
     );
 }
@@ -192,5 +341,11 @@ const styles = StyleSheet.create({
     },
     icon: {
         alignSelf: 'center'
+    },
+
+    backButtonWrapper: {
+        margin: 5,
+        width: 200,
+        backgroundColor: white
     },
 });

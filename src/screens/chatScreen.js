@@ -1,14 +1,18 @@
-import React, { useEffect, useCallback, useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+/* eslint-disable no-empty-pattern */
+import React, {
+    useEffect, useCallback, useState, useLayoutEffect
+} from 'react';
+import {
+    View, Text, TouchableOpacity
+} from 'react-native';
 import { Avatar } from 'react-native-elements';
-import { auth, db } from '../../firebase';
 import { signOut } from 'firebase/auth';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { useNavigation } from '@react-navigation/native';
+import { auth, db } from '../../firebase';
 
-
-const Chat = ({  }) => {
-const navigation = useNavigation();
+function Chat({ }) {
+    const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
     const signOutNow = () => {
         signOut(auth).then(() => {
@@ -17,10 +21,12 @@ const navigation = useNavigation();
         }).catch((error) => {
             // An error happened.
         });
-    }
+    };
     useLayoutEffect(() => {
         navigation.setOptions({
+            // eslint-disable-next-line react/no-unstable-nested-components
             headerLeft: () => (
+                // eslint-disable-next-line react-native/no-inline-styles
                 <View style={{ marginLeft: 20 }}>
                     <Avatar
                         rounded
@@ -30,16 +36,19 @@ const navigation = useNavigation();
                     />
                 </View>
             ),
+            // eslint-disable-next-line react/no-unstable-nested-components
             headerRight: () => (
-                <TouchableOpacity style={{
-                    marginRight: 10
-                }}
+                <TouchableOpacity
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    style={{
+                        marginRight: 10
+                    }}
                     onPress={signOutNow}
                 >
                     <Text>logout</Text>
                 </TouchableOpacity>
             )
-        })
+        });
     }, [navigation]);
 
     useEffect(() => {
@@ -54,16 +63,16 @@ const navigation = useNavigation();
                     avatar: 'https://placeimg.com/140/140/any',
                 },
             },
-        ])
+        ]);
     }, []);
     const onSend = useCallback((messages = []) => {
-        setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+        setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
     }, []);
     return (
         <GiftedChat
             messages={messages}
-            showAvatarForEveryMessage={true}
-            onSend={messages => onSend(messages)}
+            showAvatarForEveryMessage
+            onSend={(messages) => onSend(messages)}
             user={{
                 _id: auth?.currentUser?.email,
                 name: auth?.currentUser?.displayName,
