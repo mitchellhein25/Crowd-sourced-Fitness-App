@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button
+    StyleSheet,
+    View,
+    Text,
+    Button
 } from 'react-native';
 import {
-    getDatabase, ref, get, equalTo, query, orderByChild, push
+    getDatabase,
+    ref,
+    get,
+    equalTo,
+    query,
+    orderByChild,
+    push
 } from 'firebase/database';
 import app from '../../firebase';
 // import { useNavigation } from '@react-navigation/native';
@@ -11,15 +20,17 @@ import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
 import { white, black } from '../utils/globalStyles';
 
+
 export default function ChallengeDetail({ route, navigation }) {
-    // const navigation = useNavigation();
+    //const navigation = useNavigation();
     const [state, setState] = useState({
-        isActiveForUser: false
+        isActiveForUser: false,
+        showChatButton: true
     });
-    const { challenge, userId } = route.params ? route.params : {};
+    const { challenge, userId, user } = route.params ? route.params : {};
     const db = getDatabase(app);
 
-    const getIfActive = async () => {
+    const getIfActive = async() => {
         const challengeUsersRef = ref(db, 'challengeUsers/');
         const challengeUserRecords = await get(query(challengeUsersRef, orderByChild('userIdentifier'), equalTo(userId)));
         const challengeUserRecordsJson = challengeUserRecords.toJSON();
@@ -34,6 +45,11 @@ export default function ChallengeDetail({ route, navigation }) {
             });
         }
     };
+
+    const toChat = () => {
+
+        navigation.navigate('Chat Screen', { userId: state.id, user: user })
+    }
 
     const addToActive = () => {
         try {
@@ -55,75 +71,97 @@ export default function ChallengeDetail({ route, navigation }) {
         getIfActive();
     }, []);
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.backButtonWrapper}>
-                <Button
-                    style={styles.backToSignInButton}
-                    title='Go Back'
-                    color={white}
-                    onPress={() => navigation.goBack()}
-                />
+    return ( <
+        View style = { styles.container } >
+        <
+        View style = { styles.backButtonWrapper } >
+        <
+        Button style = { styles.backToSignInButton }
+        title = 'Go Back'
+        color = { white }
+        onPress = {
+            () => navigation.goBack() }
+        />
 
-            </View>
-            <Text style={styles.description}>{challenge.description}</Text>
-            <Text style={styles.item}>
-                <Text style={styles.bold}>Type:</Text>
-                <Text style={styles.detail}>
-                    {'\n'}
-                    {challengeTypes.find((x) => x.id === challenge.type).item}
-                </Text>
-            </Text>
-            <Text style={styles.item}>
-                <Text style={styles.bold}>Goals:</Text>
-                {challenge.goals.map((goal) => {
-                    return (
-                        <Text style={styles.detail} key={goal}>
-                            {'\n'}
-                            {goal}
-                        </Text>
-                    );
-                })}
-            </Text>
-            <Text style={styles.item}>
-                <Text style={styles.bold}>Badges:</Text>
-                {challenge.badges.map((badge) => {
-                    return (
-                        <Text style={styles.detail} key={badge}>
-                            {'\n'}
-                            {challengeBadges.find((x) => x.id === badge).item}
-                        </Text>
-                    );
-                })}
-            </Text>
-            <Text style={styles.item}>
-                <Text style={styles.bold}>Tags:</Text>
-                {challenge.tags.map((tag) => {
-                    return (
-                        <Text style={styles.detail} key={tag}>
-                            {'\n'}
-                            {tag}
-                        </Text>
-                    );
-                })}
-            </Text>
-            {state.isActiveForUser
-                ? (
-                    <Text style={styles.item}>
-                        You are actively participating in this challenge!
-                    </Text>
+        <
+        /View> <
+        Text style = { styles.description } > { challenge.description } < /Text> <
+        Text style = { styles.item } >
+        <
+        Text style = { styles.bold } > Type: < /Text> <
+        Text style = { styles.detail } > { '\n' } { challengeTypes.find((x) => x.id === challenge.type).item } <
+        /Text> <
+        /Text> <
+        Text style = { styles.item } >
+        <
+        Text style = { styles.bold } > Goals: < /Text> {
+            challenge.goals.map((goal) => {
+                return ( <
+                    Text style = { styles.detail }
+                    key = { goal } > { '\n' } { goal } <
+                    /Text>
+                );
+            })
+        } <
+        /Text> <
+        Text style = { styles.item } >
+        <
+        Text style = { styles.bold } > Badges: < /Text> {
+            challenge.badges.map((badge) => {
+                return ( <
+                    Text style = { styles.detail }
+                    key = { badge } > { '\n' } { challengeBadges.find((x) => x.id === badge).item } <
+                    /Text>
+                );
+            })
+        } <
+        /Text> <
+        Text style = { styles.item } >
+        <
+        Text style = { styles.bold } > Tags: < /Text> {
+            challenge.tags.map((tag) => {
+                return ( <
+                    Text style = { styles.detail }
+                    key = { tag } > { '\n' } { tag } <
+                    /Text>
+                );
+            })
+        } <
+        /Text> {
+            state.isActiveForUser ?
+                ( <
+                    Text style = { styles.item } >
+                    You are actively participating in this challenge!
+                    <
+                    /Text>
+                ) :
+                ( <
+                    View style = { styles.buttonWrapper } >
+                    <
+                    Button title = 'Join this Challenge'
+                    color = { black }
+                    accessibilityLabel = 'Join this Challenge button'
+                    onPress = {
+                        () => { addToActive(); } }
+                    /> <
+                    /View>
                 )
-                : (
-                    <View style={styles.buttonWrapper}>
-                        <Button
-                            title='Join this Challenge'
-                            color={black}
-                            accessibilityLabel='Join this Challenge button'
-                            onPress={() => { addToActive(); }}
-                        />
-                    </View>
-                )}
-        </View>
+        } {
+            state.showChatButton ?
+                < View style = { styles.buttonWrapper } >
+                <
+                Button
+            title = 'Chat'
+            color = { black }
+            accessibilityLabel = 'Join this Chat button'
+            onPress = {
+                () => { toChat(); } }
+            /> <
+            /View>: ""
+        }
+
+        <
+        /View>
     );
 }
 
