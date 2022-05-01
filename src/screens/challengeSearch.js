@@ -148,12 +148,7 @@ export default function ChallengeSearch({ user }) {
                             });
                         }}
                     >
-                        <Button
-                            title='Show Available Challenges'
-                            color={primaryColor}
-                            accessibilityLabel='See Available Challenges button'
-                            style={styles.button}
-                        />
+                        <Text style={styles.button}>Show Available Challenges</Text>
                         <Ionicons name='arrow-down-outline' color={primaryColor} size={30} style={styles.icon} />
                     </TouchableOpacity>
                 )}
@@ -214,6 +209,6 @@ const styles = StyleSheet.create({
         padding: 20
     },
     button: {
-        padding: 40
+        color: primaryColor
     }
 });
