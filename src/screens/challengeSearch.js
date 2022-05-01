@@ -103,7 +103,7 @@ export default function ChallengeSearch({ user }) {
                             <TouchableOpacity
                                 style={styles.listItemWrapper}
                                 key={item.id}
-                                onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id })}
+                                onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id, user })}
                             >
                                 <Text style={styles.description}>{item.description}</Text>
                                 <Text style={styles.item}>
