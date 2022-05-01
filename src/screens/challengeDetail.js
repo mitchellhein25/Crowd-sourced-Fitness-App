@@ -14,9 +14,10 @@ import { white, black } from '../utils/globalStyles';
 export default function ChallengeDetail({ route, navigation }) {
     // const navigation = useNavigation();
     const [state, setState] = useState({
-        isActiveForUser: false
+        isActiveForUser: false,
+        showChatButton: true
     });
-    const { challenge, userId } = route.params ? route.params : {};
+    const { challenge, userId, user } = route.params ? route.params : {};
     const db = getDatabase(app);
 
     const getIfActive = async () => {
@@ -33,6 +34,11 @@ export default function ChallengeDetail({ route, navigation }) {
                 }
             });
         }
+    };
+
+    const toChat = () => {
+
+        navigation.navigate('Chat Screen', { userId: state.id, user });
     };
 
     const addToActive = () => {
@@ -123,6 +129,19 @@ export default function ChallengeDetail({ route, navigation }) {
                         />
                     </View>
                 )}
+            {state.showChatButton
+                ? (
+                    <View style={styles.buttonWrapper}>
+                        <Button
+                            title='Chat'
+                            color={black}
+                            accessibilityLabel='Join this Chat button'
+                            onPress={() => { toChat(); }}
+                        />
+                    </View>
+                )
+                : ''}
+
         </View>
     );
 }

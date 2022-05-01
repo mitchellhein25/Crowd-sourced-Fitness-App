@@ -7,7 +7,7 @@ import SignUpScreen from './src/screens/signUpScreen';
 import MainAppView from './src/screens/mainAppView';
 import AddNewChallenge from './src/screens/addNewChallenge';
 import ChallengeDetail from './src/screens/challengeDetail';
-// import Chat from './src/screens/chatScreen';
+import Chat from './src/screens/chatScreen';
 import { black, white } from './src/utils/globalStyles';
 import './firebase';
 
@@ -38,7 +38,7 @@ export default function App() {
                 <Stack.Screen name="Main App View" component={MainAppView} />
                 <Stack.Screen name="Add New Challenge" component={AddNewChallenge} />
                 <Stack.Screen name="Challenge Detail" component={ChallengeDetail} />
-                {/* <Stack.Screen name="Chat Screen" component={Chat} /> */}
+                <Stack.Screen name="Chat Screen" component={Chat} />
             </Stack.Navigator>
         </NavigationContainer>
     );
