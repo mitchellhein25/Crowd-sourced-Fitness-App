@@ -25,9 +25,9 @@ describe('<ChallengeDetail /> load', () => {
         }
     });
     
-    it('has 7 children', () => {
+    it('has 8 children', () => {
         const tree = renderer.create(<ChallengeDetail route={route} />).toJSON();
-        expect(tree.children.length).toBe(7);
+        expect(tree.children.length).toBe(8);
     });
 
     it('renders correctly', async () => {
