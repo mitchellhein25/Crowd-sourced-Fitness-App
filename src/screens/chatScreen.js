@@ -1,6 +1,5 @@
-/* eslint-disable no-empty-pattern */
 import React, {
-    useEffect, useState, useLayoutEffect
+    useEffect, useState
 } from 'react';
 import {
     StyleSheet, View, Text, Button, TextInput
@@ -12,29 +11,19 @@ import {
     getDatabase, ref, onValue, query, orderByChild, push
 } from 'firebase/database';
 import { Avatar } from 'react-native-elements';
-// import { signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import {
     white, black, accentColor, secondaryColorDarker
 } from '../utils/globalStyles';
 import app from '../../firebase';
 
-function Chat({ route }) {
+export default function Chat({ route }) {
     const { user } = route.params ? route.params : {};
     const u = Object.values(user)[0];
-    console.log('user', user);
     const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState();
     const [profilePic, setProfilePic] = useState();
-    //    const signOutNow = () => {
-    //        signOut(auth).then(() => {
-    //            // Sign-out successful.
-    //            navigation.replace('Login');
-    //        }).catch((error) => {
-    //            // An error happened.
-    //        });
-    //    };
 
     // Retrieve profile pic from Firestore
     function getProfileImage(imagePath) {
@@ -48,35 +37,6 @@ function Chat({ route }) {
             });
     }
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            // eslint-disable-next-line react/no-unstable-nested-components
-            headerLeft: () => (
-                // eslint-disable-next-line react-native/no-inline-styles
-                <View style={{ marginLeft: 20 }}>
-                    <Avatar
-                        rounded
-                        source={{
-                            uri: profilePic
-                        }}
-                    />
-                </View>
-            ),
-            // eslint-disable-next-line react/no-unstable-nested-components
-            //            headerRight: () => (
-            //                <TouchableOpacity
-            //                    // eslint-disable-next-line react-native/no-inline-styles
-            //                    style={{
-            //                        marginRight: 10
-            //                    }}
-            //                   onPress={signOutNow}
-            //                >
-            //                    <Text>logout</Text>
-            //                </TouchableOpacity>
-            //            )
-        });
-    }, [navigation]);
-
     useEffect(() => {
         async function getImage() {
             if (user) {
@@ -85,6 +45,7 @@ function Chat({ route }) {
             }
         }
         getImage();
+
         const db = getDatabase(app);
         const messagesRef = ref(db, 'messages/');
         const mes = query(messagesRef, orderByChild('date'));
@@ -95,20 +56,16 @@ function Chat({ route }) {
                 const v = childSnapshot0.val();
                 list.push(v);
             });
-            //            let keys = Object.keys(snapshot0);
-            //            let list = keys.map((key)=>snapshot0[key])
             setMessages(list);
-            console.log('list2222', list);
+            // console.log('list2222', list);
         });
-        // setMessages(messages);
     }, []);
+
     const onSend = () => {
-        // Insert a challenge into the Challenges database
         const date = new Date();
         const formattedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}Z`;
         const db = getDatabase(app);
         const messagesRef = ref(db, 'messages/');
-        //        setContent(JSON.stringify(user));
         const mes = {
             content,
             user: u.email,
@@ -139,6 +96,14 @@ function Chat({ route }) {
                 messages.map((message, i) => {
                     return (
                         <View key={i} style={styles.chatWrapper}>
+                            <View>
+                                <Avatar
+                                    rounded
+                                    source={{
+                                        uri: profilePic
+                                    }}
+                                />
+                            </View>
                             <Text style={styles.username}>{message.username}</Text>
                             <Text style={styles.content}>{message.content}</Text>
                         </View>
@@ -172,7 +137,6 @@ function Chat({ route }) {
     );
 }
 
-export default Chat;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
