@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, FlatList, TouchableOpacity
+    StyleSheet, View, Text, FlatList, TouchableOpacity
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -139,11 +139,7 @@ export default function ActiveChallenges({ user }) {
                     />
                 ) : (
                     <TouchableOpacity onPress={() => setState({ ...state, showList: true })}>
-                        <Button
-                            title='Show Active Challenges'
-                            color={primaryColor}
-                            accessibilityLabel='See Active Challenges button'
-                        />
+                        <Text style={styles.button}>Show Active Challenges</Text>
                         <Ionicons name='arrow-down-outline' color={primaryColor} size={30} style={styles.icon} />
                     </TouchableOpacity>
                 )}
@@ -193,4 +189,7 @@ const styles = StyleSheet.create({
     icon: {
         alignSelf: 'center'
     },
+    button: {
+        color: primaryColor
+    }
 });
