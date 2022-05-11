@@ -4,47 +4,49 @@ import React, {
 import {
     StyleSheet, View, Text, Button, TextInput
 } from 'react-native';
-import {
-    getStorage, ref as refStorage, getDownloadURL
-} from 'firebase/storage';
+// import {
+//    getStorage, ref as refStorage, getDownloadURL
+// } from 'firebase/storage';
 import {
     getDatabase, ref, onValue, query, orderByChild, push
 } from 'firebase/database';
-import { Avatar } from 'react-native-elements';
+// import { Avatar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import {
-    white, black, accentColor, secondaryColorDarker
+    white, black, accentColor, secondaryColorDarker, secondaryColorLighter
 } from '../utils/globalStyles';
 import app from '../../firebase';
 
 export default function Chat({ route }) {
-    const { user } = route.params ? route.params : {};
-    const u = Object.values(user)[0];
+    const { user, challenge } = route.params ? route.params : {};
+    // console.log(user);
+    // console.log(Object.keys(user)[0]);
+    const userObject = Object.values(user)[0];
     const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState();
-    const [profilePic, setProfilePic] = useState();
+    // const [profilePic, setProfilePic] = useState();
 
     // Retrieve profile pic from Firestore
-    function getProfileImage(imagePath) {
-        const storage = getStorage(app);
-        return getDownloadURL(refStorage(storage, imagePath))
-            .then((url) => {
-                return url;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    // function getProfileImage(imagePath) {
+    //    const storage = getStorage(app);
+    //    return getDownloadURL(refStorage(storage, imagePath))
+    //        .then((url) => {
+    //            return url;
+    //        })
+    //        .catch((error) => {
+    //            console.log(error);
+    //        });
+    // }
 
     useEffect(() => {
-        async function getImage() {
-            if (user) {
-                const profileImagePath = await getProfileImage(Object.values(user)[0].profilePic);
-                setProfilePic(profileImagePath);
-            }
-        }
-        getImage();
+        // async function getImage() {
+        //    if (user) {
+        //        const profileImagePath = await getProfileImage(Object.values(user)[0].profilePic);
+        //        setProfilePic(profileImagePath);
+        //    }
+        // }
+        // getImage();
 
         const db = getDatabase(app);
         const messagesRef = ref(db, 'messages/');
@@ -53,14 +55,15 @@ export default function Chat({ route }) {
             const list = [];
             snapshot0.forEach((childSnapshot0) => {
 
-                const v = childSnapshot0.val();
-                list.push(v);
+                const mes = childSnapshot0.val();
+                if (mes.challengeId === challenge.id) {
+                    list.push(mes);
+                }
             });
             setMessages(list);
-            // console.log('list2222', list);
+
         });
     }, []);
-
     const onSend = () => {
         const date = new Date();
         const formattedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}Z`;
@@ -68,13 +71,14 @@ export default function Chat({ route }) {
         const messagesRef = ref(db, 'messages/');
         const mes = {
             content,
-            user: u.email,
-            username: u.firstName,
-            date: formattedDate
+            userFirstName: userObject.firstName,
+            userId: Object.keys(user)[0],
+            date: formattedDate,
+            challengeId: challenge.id,
+            profilePic: userObject.profilePic
         };
 
         push(messagesRef, mes);
-
         messages.push(mes);
         setMessages([...messages]);
         setContent('');
@@ -95,16 +99,30 @@ export default function Chat({ route }) {
             {
                 messages.map((message, i) => {
                     return (
-                        <View key={i} style={styles.chatWrapper}>
-                            <View>
-                                <Avatar
-                                    rounded
-                                    source={{
-                                        uri: profilePic
-                                    }}
-                                />
-                            </View>
-                            <Text style={styles.username}>{message.username}</Text>
+                        <View
+                            key={i}
+                            style={message.userId === Object.keys(user)[0]
+                                ? styles.chatWrapperAccent
+                                : styles.chatWrapperWhite}
+                        >
+                            {/* <View> */}
+                            {/*    {message.profilePic === '' */}
+                            {/*        ? <View style={styles.imageContainer} /> */}
+                            {/*        : ( */}
+                            {/*            <Avatar */}
+                            {/*                rounded */}
+                            {/*                source={{ */}
+                            {/*                    uri: message.profilePic */}
+                            {/*                }} */}
+                            {/*            /> */}
+                            {/*        )} */}
+                            {/* </View> */}
+                            <Text style={message.userId === Object.keys(user)[0]
+                                ? styles.usernameWhite
+                                : styles.usernameAccent}
+                            >
+                                {message.userFirstName}
+                            </Text>
                             <Text style={styles.content}>{message.content}</Text>
                         </View>
                     );
@@ -169,27 +187,45 @@ const styles = StyleSheet.create({
         backgroundColor: secondaryColorDarker,
         flex: 1,
         height: 40,
-
         justifyContent: 'center',
         alignItems: 'flex-start',
         margin: 5,
         borderRadius: 5,
         flexDirection: 'row'
     },
-    chatWrapper: {
-
+    chatWrapperAccent: {
         flexDirection: 'row',
         backgroundColor: accentColor,
         borderRadius: 10,
         padding: 10,
         margin: 10
     },
-    username: {
+    chatWrapperWhite: {
+        flexDirection: 'row',
+        backgroundColor: secondaryColorLighter,
+        borderRadius: 10,
+        padding: 10,
+        margin: 10
+    },
+    usernameWhite: {
         color: white,
+        marginRight: 10
+    },
+    usernameAccent: {
+        color: accentColor,
         marginRight: 10
     },
     content: {
         color: black
     },
-
+    // imageContainer: {
+    //    borderWidth: 1,
+    //    borderColor: secondaryColor,
+    //    backgroundColor: secondaryColor,
+    //    borderRadius: 35,
+    //    height: 35,
+    //    width: 35,
+    //    alignSelf: 'center',
+    //    justifyContent: 'center',
+    // },
 });
