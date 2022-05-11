@@ -4,7 +4,7 @@ import {
     StyleSheet, View, Text, Button, Image, TextInput
 } from 'react-native';
 import {
-    getDatabase, ref as refDatabase, update
+    getDatabase, ref as refDatabase, update, onValue, query, orderByChild, equalTo
 } from 'firebase/database';
 import {
     getStorage, ref as refStorage, uploadBytes, getDownloadURL
@@ -21,21 +21,23 @@ export default function AccountScreen({ user }) {
         lastName: user ? Object.values(user)[0].lastName : 'no user logged in',
         password: user ? Object.values(user)[0].password : 'no user logged in',
         id: user ? Object.keys(user)[0] : 'no user logged in',
-        profilePic: '',
+        // profilePic: '',
         editFirstName: false,
         editLastName: false,
         editEmail: false,
         editPassword: false
     });
+    const [profilePic, setProfilePic] = useState('');
 
     useEffect(() => {
         async function getImage() {
             if (user) {
-                const profileImagePath = await getProfileImage(Object.values(user)[0].profilePic);
-                setState({
-                    ...state,
-                    profilePic: profileImagePath
-                });
+                // console.log(Object.values(user)[0].profilePic);
+                if (Object.values(user)[0].profilePic) {
+                    const profileImagePath = await
+                    getProfileImage(Object.values(user)[0].profilePic);
+                    setProfilePic(profileImagePath);
+                }
             }
         }
         getImage();
@@ -62,16 +64,20 @@ export default function AccountScreen({ user }) {
                 return;
             }
         }
+        // console.log('eBegin image pick');
 
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
+            // aspect: [4, 3],
+            // quality: 1,
+            // presentationStyle: 0,
         });
+        // console.log(result);
 
         // https://dev.to/emmbyiringiro/upload-image-with-expo-and-firebase-cloud-storage-3481
         // Convert image to blob for Firebase storage
+        // console.log('beginning image convert');
         const blob = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.onload = function () {
@@ -84,11 +90,9 @@ export default function AccountScreen({ user }) {
             xhr.open('GET', result.uri, true);
             xhr.send(null);
         });
-
-        await setState({
-            ...state,
-            profilePic: result.uri
-        });
+        // console.log('end image convert');
+        await setProfilePic(result.uri);
+        // console.log('ebegin save to firebase');
         try {
             // Save image to Firebase Storage
             const imgName = `img-${new Date().getTime()}`;
@@ -98,7 +102,7 @@ export default function AccountScreen({ user }) {
             await uploadBytes(imagesRef, blob).then((snapshot) => {
                 imagePath = snapshot.metadata.fullPath;
             });
-            // Save user to databse with new image
+            // Save user to database with new image
             const db = getDatabase(app);
             const userRef = refDatabase(db, `users/${state.id}`);
             update(userRef, {
@@ -108,9 +112,22 @@ export default function AccountScreen({ user }) {
                 password: state.password,
                 profilePic: imagePath
             });
+
+            // // Update messages with user's information
+            // const messagesRef = refDatabase(db, `messages/`);
+            // const messages = query(messagesRef, orderByChild('userId'), equalTo(state.id));
+            // onValue(messages, (snapshot) => {
+            //    snapshot.forEach((childSnapshot) => {
+            //        const messageRef = refDatabase(db, `messages/${childSnapshot.key}`);
+            //        update(messageRef, {
+            //            profilePic: imagePath
+            //        });
+            //    });
+            // });
         } catch (error) {
             console.log(error);
         }
+        // console.log('end save to firebase');
     };
 
     const handleChange = (e, name) => {
@@ -121,6 +138,7 @@ export default function AccountScreen({ user }) {
     };
 
     const updateAccountInfo = async (e, name) => {
+
         try {
             const db = getDatabase(app);
             const userRef = refDatabase(db, `users/${state.id}`);
@@ -129,9 +147,21 @@ export default function AccountScreen({ user }) {
                 firstName: state.firstName,
                 lastName: state.lastName,
                 password: state.password,
-                profilePic: state.profilePic
+                profilePic
             });
-            setState({
+            // Update messages with user's information
+            const messagesRef = refDatabase(db, 'messages/');
+            const messages = query(messagesRef, orderByChild('userId'), equalTo(state.id));
+            onValue(messages, (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const messageRef = refDatabase(db, `messages/${childSnapshot.key}`);
+                    update(messageRef, {
+                        userFirstName: state.firstName,
+                        profilePic
+                    });
+                });
+            });
+            await setState({
                 ...state,
                 [name]: false,
             });
@@ -139,7 +169,7 @@ export default function AccountScreen({ user }) {
             console.log(error);
         }
     };
-
+    // console.log('STATE: ', state);
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
@@ -147,12 +177,12 @@ export default function AccountScreen({ user }) {
             </View>
             <View style={styles.accountInfoContainer}>
                 <View style={styles.imageContainer}>
-                    {state.profilePic !== ''
+                    {profilePic !== ''
                         ? (
                             <Image
                                 style={styles.image}
                                 source={{
-                                    uri: state.profilePic
+                                    uri: profilePic
                                 }}
                             />
                         )
@@ -166,7 +196,7 @@ export default function AccountScreen({ user }) {
                             />
                         )}
                 </View>
-                {state.profilePic !== ''
+                {profilePic !== ''
                     ? (
                         <Button
                             style={styles.imageText}

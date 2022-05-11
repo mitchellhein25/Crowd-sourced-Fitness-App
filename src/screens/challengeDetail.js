@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button
+    StyleSheet, View, Text, Button, Image
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
 } from 'firebase/database';
 import app from '../../firebase';
-// import { useNavigation } from '@react-navigation/native';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
 import { white, black } from '../utils/globalStyles';
 
 export default function ChallengeDetail({ route, navigation }) {
-    // const navigation = useNavigation();
     const [state, setState] = useState({
         isActiveForUser: false,
-        showChatButton: true
     });
     const { challenge, userId, user } = route.params ? route.params : {};
     const db = getDatabase(app);
@@ -38,7 +35,7 @@ export default function ChallengeDetail({ route, navigation }) {
 
     const toChat = () => {
 
-        navigation.navigate('Chat Screen', { userId: state.id, user });
+        navigation.navigate('Chat Screen', { user, challenge });
     };
 
     const addToActive = () => {
@@ -98,6 +95,10 @@ export default function ChallengeDetail({ route, navigation }) {
                         <Text style={styles.detail} key={badge}>
                             {'\n'}
                             {challengeBadges.find((x) => x.id === badge).item}
+                            <Image
+                                style={styles.badgeImage}
+                                source={challengeBadges.find((x) => x.id === badge).image}
+                            />
                         </Text>
                     );
                 })}
@@ -129,7 +130,7 @@ export default function ChallengeDetail({ route, navigation }) {
                         />
                     </View>
                 )}
-            {state.showChatButton
+            {state.isActiveForUser
                 ? (
                     <View style={styles.buttonWrapper}>
                         <Button
@@ -140,7 +141,7 @@ export default function ChallengeDetail({ route, navigation }) {
                         />
                     </View>
                 )
-                : ''}
+                : null}
 
         </View>
     );
@@ -184,4 +185,8 @@ const styles = StyleSheet.create({
         width: 200,
         backgroundColor: black
     },
+    badgeImage: {
+        height: 50,
+        width: 50
+    }
 });

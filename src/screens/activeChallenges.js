@@ -64,15 +64,23 @@ export default function ActiveChallenges({ user }) {
                                 });
                             });
                         });
-                        challengesList.push({
-                            id: childSnapshot.key,
-                            description: childSnapshot.val().description,
-                            date: childSnapshot.val().date,
-                            type: childSnapshot.val().type,
-                            goals: goalsList,
-                            tags: tagsList,
-                            badges: badgesList,
+                        let alreadyInArray = false;
+                        challengesList.forEach((challenge) => {
+                            if (challenge.id === childSnapshot.key) {
+                                alreadyInArray = true;
+                            }
                         });
+                        if (alreadyInArray === false) {
+                            challengesList.push({
+                                id: childSnapshot.key,
+                                description: childSnapshot.val().description,
+                                date: childSnapshot.val().date,
+                                type: childSnapshot.val().type,
+                                goals: goalsList,
+                                tags: tagsList,
+                                badges: badgesList,
+                            });
+                        }
                     });
                 });
             });
