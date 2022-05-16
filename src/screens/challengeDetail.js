@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, Image
+    StyleSheet, View, Text, Button, Image, TouchableOpacity
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
 } from 'firebase/database';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
-import { white, black } from '../utils/globalStyles';
+import { white, black, primaryColor } from '../utils/globalStyles';
 
 export default function ChallengeDetail({ route, navigation }) {
     const [state, setState] = useState({
@@ -61,13 +62,10 @@ export default function ChallengeDetail({ route, navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.backButtonWrapper}>
-                <Button
-                    style={styles.backToSignInButton}
-                    title='Go Back'
-                    color={white}
-                    onPress={() => navigation.goBack()}
-                />
-
+                <TouchableOpacity style={styles.row} onPress={() => navigation.goBack()}>
+                    <Ionicons name='arrow-back-outline' color={white} size={30} />
+                    <Text style={styles.backButtonText}>Go Back</Text>
+                </TouchableOpacity>
             </View>
             <Text style={styles.description}>{challenge.description}</Text>
             <Text style={styles.item}>
@@ -116,9 +114,11 @@ export default function ChallengeDetail({ route, navigation }) {
             </Text>
             {state.isActiveForUser
                 ? (
-                    <Text style={styles.item}>
-                        You are actively participating in this challenge!
-                    </Text>
+                    <View style={styles.activeRow}>
+                        <Text style={styles.active}>
+                            You are actively participating in this challenge!
+                        </Text>
+                    </View>
                 )
                 : (
                     <View style={styles.buttonWrapper}>
@@ -133,12 +133,10 @@ export default function ChallengeDetail({ route, navigation }) {
             {state.isActiveForUser
                 ? (
                     <View style={styles.buttonWrapper}>
-                        <Button
-                            title='Chat'
-                            color={black}
-                            accessibilityLabel='Join this Chat button'
-                            onPress={() => { toChat(); }}
-                        />
+                        <TouchableOpacity style={styles.row} onPress={() => { toChat(); }}>
+                            <Ionicons name='chatbubble-ellipses-outline' color={white} size={30} />
+                            <Text style={styles.buttonText}>Chat</Text>
+                        </TouchableOpacity>
                     </View>
                 )
                 : null}
@@ -174,19 +172,55 @@ const styles = StyleSheet.create({
         fontSize: 22,
     },
     buttonWrapper: {
-        width: '80%',
+        width: 150,
         alignSelf: 'center',
         marginTop: 20,
         borderWidth: 1,
-        borderRadius: 20
+        borderRadius: 30,
+        padding: 8,
+        alignItems: 'center',
+        backgroundColor: black
     },
     backButtonWrapper: {
         margin: 5,
-        width: 200,
-        backgroundColor: black
+        width: 150,
+        backgroundColor: black,
+        borderRadius: 30,
+        alignSelf: 'center',
+        padding: 8,
+        alignItems: 'center'
     },
     badgeImage: {
         height: 50,
         width: 50
-    }
+    },
+    buttonText: {
+        fontSize: 20,
+        alignSelf: 'center',
+        paddingLeft: 10,
+        color: white
+    },
+    backButtonText: {
+        fontSize: 20,
+        alignSelf: 'center',
+        color: white,
+        paddingLeft: 10
+    },
+    row: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    active: {
+        fontSize: 18,
+        color: primaryColor,
+        marginTop: 15,
+        width: '100%',
+        textAlign: 'center'
+    },
+    activeRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '50%',
+        alignSelf: 'center',
+    },
 });
