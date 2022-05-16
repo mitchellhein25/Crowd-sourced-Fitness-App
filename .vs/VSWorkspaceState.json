@@ -4,7 +4,10 @@
     "\\assets",
     "\\src",
     "\\src\\screens",
-    "\\src\\utils"
+    "\\src\\utils",
+    "\\__tests__",
+    "\\__tests__\\screens"
   ],
+  "SelectedNode": "\\__tests__\\screens\\challengeDetail.test.js",
   "PreviewInSolutionExplorer": false
 }
