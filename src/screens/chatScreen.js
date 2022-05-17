@@ -2,11 +2,12 @@ import React, {
     useEffect, useState
 } from 'react';
 import {
-    StyleSheet, View, Text, Button, TextInput
+    StyleSheet, View, Text, TextInput, TouchableOpacity
 } from 'react-native';
 // import {
 //    getStorage, ref as refStorage, getDownloadURL
 // } from 'firebase/storage';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import {
     getDatabase, ref, onValue, query, orderByChild, push
 } from 'firebase/database';
@@ -87,13 +88,10 @@ export default function Chat({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.backButtonWrapper}>
-                <Button
-                    style={styles.backToSignInButton}
-                    title='Go Back'
-                    color={white}
-                    onPress={() => navigation.goBack()}
-                />
-
+                <TouchableOpacity style={styles.row} onPress={() => navigation.goBack()}>
+                    <Ionicons name='arrow-back-outline' color={white} size={30} />
+                    <Text style={styles.backButtonText}>Go Back</Text>
+                </TouchableOpacity>
             </View>
 
             {
@@ -131,7 +129,7 @@ export default function Chat({ route }) {
 
             <View style={styles.bottomContainer}>
                 <TextInput
-                    style={styles.goalInput}
+                    style={styles.input}
                     value={content}
                     onChangeText={(e) => {
                         setContent(e);
@@ -139,13 +137,10 @@ export default function Chat({ route }) {
                 />
 
                 <View style={styles.sendButtonWrapper}>
-                    <Button
-                        style={styles.sendButton}
-                        title='Send'
-                        color={white}
-                        onPress={() => onSend()}
-                    />
-
+                    <TouchableOpacity style={styles.row} onPress={() => onSend()}>
+                        {/* <Ionicons name='arrow-back-outline' color={white} size={30} /> */}
+                        <Text style={styles.sendButtonText}>Send</Text>
+                    </TouchableOpacity>
                 </View>
 
             </View>
@@ -168,30 +163,54 @@ const styles = StyleSheet.create({
         height: 100,
         flexDirection: 'row',
         backgroundColor: white,
-        justifyContent: 'flex-start',
-        paddingTop: '15%',
+        justifyContent: 'center',
         padding: 20
     },
     sendButtonWrapper: {
-        height: 40,
+        margin: 5,
         width: 100,
         backgroundColor: black,
-        color: white
+        borderRadius: 30,
+        alignSelf: 'center',
+        padding: 8,
+        alignItems: 'center',
+        height: 45
     },
     backButtonWrapper: {
-        margin: 50,
-        width: 200,
-        backgroundColor: black
+        margin: 5,
+        width: 150,
+        backgroundColor: black,
+        borderRadius: 30,
+        alignSelf: 'center',
+        padding: 8,
+        alignItems: 'center'
     },
-    goalInput: {
+    backButtonText: {
+        fontSize: 20,
+        alignSelf: 'center',
+        color: white,
+        paddingLeft: 10
+    },
+    sendButtonText: {
+        fontSize: 20,
+        alignSelf: 'center',
+        color: white,
+        textAlignVertical: 'center'
+    },
+    row: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    input: {
         backgroundColor: secondaryColorDarker,
         flex: 1,
         height: 40,
         justifyContent: 'center',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         margin: 5,
         borderRadius: 5,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginTop: 11
     },
     chatWrapperAccent: {
         flexDirection: 'row',
