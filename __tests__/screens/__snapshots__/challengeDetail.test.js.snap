@@ -28,7 +28,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "alignItems": "flex-start",
         "display": "flex",
         "flexDirection": "column",
-        "fontSize": 25,
+        "fontSize": 20,
         "marginTop": 20,
         "textAlign": "left",
       }
@@ -61,7 +61,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "alignItems": "flex-start",
         "display": "flex",
         "flexDirection": "column",
-        "fontSize": 25,
+        "fontSize": 20,
         "marginTop": 20,
         "textAlign": "left",
       }
@@ -74,7 +74,21 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         }
       }
     >
-      Goals:
+      Goals
+    </Text>
+    
+
+    <Text
+      style={
+        Object {
+          "fontSize": 20,
+        }
+      }
+    >
+      Completed:
+      0
+      /
+      0
     </Text>
   </Text>
   <Text
@@ -83,7 +97,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "alignItems": "flex-start",
         "display": "flex",
         "flexDirection": "column",
-        "fontSize": 25,
+        "fontSize": 20,
         "marginTop": 20,
         "textAlign": "left",
       }
@@ -116,7 +130,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "alignItems": "flex-start",
         "display": "flex",
         "flexDirection": "column",
-        "fontSize": 25,
+        "fontSize": 20,
         "marginTop": 20,
         "textAlign": "left",
       }
@@ -143,17 +157,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
       
     </Text>
   </Text>
-  <View
-    style={
-      Object {
-        "alignSelf": "center",
-        "borderRadius": 20,
-        "borderWidth": 1,
-        "marginTop": 20,
-        "width": "80%",
-      }
-    }
-  >
+  <View>
     <View
       accessibilityLabel="Join this Challenge button"
       accessibilityRole="button"

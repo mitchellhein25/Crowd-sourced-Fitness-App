@@ -40,11 +40,13 @@ export default function ActiveChallenges({ user }) {
                                 const goalUsers = query(goalUsersRef, orderByChild('goalIdentifier'), equalTo(childSnapshot2.val().goalsIdentifier));
                                 onValue(goalUsers, (snapshot3) => {
                                     snapshot3.forEach((childSnapshot3) => {
-                                        if (childSnapshot3.val().userIdentifier == state.id) {
-                                            const goalVariables = { completed: childSnapshot3.val().completed }
+                                        if (childSnapshot3.val().userIdentifier === state.id) {
+                                            const goalVariables = {
+                                                completed: childSnapshot3.val().completed
+                                            };
                                             const goalRef = ref(db, `goals/${childSnapshot3.val().goalIdentifier}/description`);
                                             onValue(goalRef, (snapshot3) => {
-                                                goalVariables['description'] = snapshot3.val();
+                                                goalVariables.description = snapshot3.val();
                                                 goalsList.push(goalVariables);
                                             });
                                         }
