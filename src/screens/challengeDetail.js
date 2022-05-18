@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button
+    StyleSheet, View, Text, Button, Pressable
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
@@ -49,6 +49,16 @@ export default function ChallengeDetail({ route }) {
         }
     };
 
+    const getCompletedGoals = (challengeGoals) => {
+        let goalsCompleted = 0;
+        for (let i = 0; i < challengeGoals.length; i ++) {
+            if (challengeGoals[i].completed == true) {
+                goalsCompleted += 1;
+            }
+        }
+        return goalsCompleted;
+    }
+
     useEffect(() => {
         getIfActive();
     }, []);
@@ -64,12 +74,17 @@ export default function ChallengeDetail({ route }) {
                 </Text>
             </Text>
             <Text style={styles.item}>
-                <Text style={styles.bold}>Goals:</Text>
+                <Text style={styles.bold}>Goals</Text>
+                {'\n'}
+                <Text style={{fontSize:20}}>Completed: {getCompletedGoals(challenge.goals)}/{challenge.goals.length}</Text>
                 {challenge.goals.map((goal) => {
                     return (
                         <Text style={styles.detail} key={goal}>
                             {'\n'}
-                            {goal}
+                            {goal.description}
+                            <Pressable style={styles.markGoalCompletePressable}>
+                                <Text style={ (goal.completed == true) ? styles.completeButton2 : styles.completeButton1 }>Complete</Text>
+                            </Pressable>
                         </Text>
                     );
                 })}
@@ -132,7 +147,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     item: {
-        fontSize: 25,
+        fontSize: 20,
         textAlign: 'left',
         alignItems: 'flex-start',
         marginTop: 20,
@@ -141,12 +156,13 @@ const styles = StyleSheet.create({
     },
     detail: {
         fontSize: 22,
+    },  
+    completeButton1: {
+        color: 'red',
+        fontSize: 18
     },
-    buttonWrapper: {
-        width: '80%',
-        alignSelf: 'center',
-        marginTop: 20,
-        borderWidth: 1,
-        borderRadius: 20
+    completeButton2: {
+        color: 'green',
+        fontSize: 18
     }
 });
