@@ -12,7 +12,19 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
     }
   }
 >
-  <View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "backgroundColor": "black",
+        "borderRadius": 30,
+        "margin": 5,
+        "padding": 8,
+        "width": 150,
+      }
+    }
+  >
     <View
       accessible={true}
       focusable={true}
@@ -25,12 +37,23 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
       onStartShouldSetResponder={[Function]}
       style={
         Object {
+          "display": "flex",
+          "flexDirection": "row",
           "opacity": 1,
         }
       }
     >
       <Text />
-      <Text>
+      <Text
+        style={
+          Object {
+            "alignSelf": "center",
+            "color": "white",
+            "fontSize": 20,
+            "paddingLeft": 10,
+          }
+        }
+      >
         Go Back
       </Text>
     </View>
@@ -51,7 +74,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "alignItems": "flex-start",
         "display": "flex",
         "flexDirection": "column",
-        "fontSize": 20,
+        "fontSize": 25,
         "marginTop": 20,
         "textAlign": "left",
       }
@@ -84,7 +107,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "alignItems": "flex-start",
         "display": "flex",
         "flexDirection": "column",
-        "fontSize": 20,
+        "fontSize": 25,
         "marginTop": 20,
         "textAlign": "left",
       }
@@ -97,21 +120,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         }
       }
     >
-      Goals
-    </Text>
-    
-
-    <Text
-      style={
-        Object {
-          "fontSize": 20,
-        }
-      }
-    >
-      Completed:
-      0
-      /
-      0
+      Goals:
     </Text>
   </Text>
   <Text
@@ -120,7 +129,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "alignItems": "flex-start",
         "display": "flex",
         "flexDirection": "column",
-        "fontSize": 20,
+        "fontSize": 25,
         "marginTop": 20,
         "textAlign": "left",
       }
@@ -147,6 +156,12 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
       Barbell Strength
       <Image
         source={1}
+        style={
+          Object {
+            "height": 50,
+            "width": 50,
+          }
+        }
       />
     </Text>
   </Text>
@@ -156,7 +171,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "alignItems": "flex-start",
         "display": "flex",
         "flexDirection": "column",
-        "fontSize": 20,
+        "fontSize": 25,
         "marginTop": 20,
         "textAlign": "left",
       }
@@ -183,7 +198,20 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
       
     </Text>
   </Text>
-  <View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "backgroundColor": "black",
+        "borderRadius": 30,
+        "borderWidth": 1,
+        "marginTop": 20,
+        "padding": 8,
+        "width": 150,
+      }
+    }
+  >
     <View
       accessibilityLabel="Join this Challenge button"
       accessibilityRole="button"
