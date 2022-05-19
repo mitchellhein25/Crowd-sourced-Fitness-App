@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, Pressable, TouchableOpacity, Image
+    StyleSheet, View, Text, Button, Image, TouchableOpacity
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
@@ -9,9 +9,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
-import {
-    white, black, red, green
-} from '../utils/globalStyles';
+import { white, black, primaryColor } from '../utils/globalStyles';
 
 export default function ChallengeDetail({ route, navigation }) {
     const [state, setState] = useState({
@@ -57,16 +55,6 @@ export default function ChallengeDetail({ route, navigation }) {
         }
     };
 
-    const getCompletedGoals = (challengeGoals) => {
-        let goalsCompleted = 0;
-        for (let i = 0; i < challengeGoals.length; i += 1) {
-            if (challengeGoals[i].completed === true) {
-                goalsCompleted += 1;
-            }
-        }
-        return goalsCompleted;
-    };
-
     useEffect(() => {
         getIfActive();
     }, []);
@@ -88,27 +76,12 @@ export default function ChallengeDetail({ route, navigation }) {
                 </Text>
             </Text>
             <Text style={styles.item}>
-                <Text style={styles.bold}>Goals</Text>
-                {'\n'}
-                <Text style={styles.completedGoals}>
-                    Completed:
-                    { getCompletedGoals(challenge.goals) }
-                    /
-                    { challenge.goals.length }
-                </Text>
+                <Text style={styles.bold}>Goals:</Text>
                 {challenge.goals.map((goal) => {
                     return (
                         <Text style={styles.detail} key={goal}>
                             {'\n'}
-                            {goal.description}
-                            <Pressable style={styles.markGoalCompletePressable}>
-                                <Text style={(goal.completed === true)
-                                    ? styles.completeButton2
-                                    : styles.completeButton1}
-                                >
-                                    Complete
-                                </Text>
-                            </Pressable>
+                            {goal}
                         </Text>
                     );
                 })}
@@ -188,7 +161,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     item: {
-        fontSize: 20,
+        fontSize: 25,
         textAlign: 'left',
         alignItems: 'flex-start',
         marginTop: 20,
@@ -198,15 +171,56 @@ const styles = StyleSheet.create({
     detail: {
         fontSize: 22,
     },
-    completeButton1: {
-        color: red,
-        fontSize: 18
+    buttonWrapper: {
+        width: 150,
+        alignSelf: 'center',
+        marginTop: 20,
+        borderWidth: 1,
+        borderRadius: 30,
+        padding: 8,
+        alignItems: 'center',
+        backgroundColor: black
     },
-    completeButton2: {
-        color: green,
-        fontSize: 18
+    backButtonWrapper: {
+        margin: 5,
+        width: 150,
+        backgroundColor: black,
+        borderRadius: 30,
+        alignSelf: 'center',
+        padding: 8,
+        alignItems: 'center'
     },
-    completedGoals: {
-        fontSize: 20
-    }
+    badgeImage: {
+        height: 50,
+        width: 50
+    },
+    buttonText: {
+        fontSize: 20,
+        alignSelf: 'center',
+        paddingLeft: 10,
+        color: white
+    },
+    backButtonText: {
+        fontSize: 20,
+        alignSelf: 'center',
+        color: white,
+        paddingLeft: 10
+    },
+    row: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    active: {
+        fontSize: 18,
+        color: primaryColor,
+        marginTop: 15,
+        width: '100%',
+        textAlign: 'center'
+    },
+    activeRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '50%',
+        alignSelf: 'center',
+    },
 });

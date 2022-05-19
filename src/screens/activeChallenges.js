@@ -36,21 +36,9 @@ export default function ActiveChallenges({ user }) {
                         const goalsList = [];
                         onValue(challengeGoals, (snapshot2) => {
                             snapshot2.forEach((childSnapshot2) => {
-                                const goalUsersRef = ref(db, 'goalUsers/');
-                                const goalUsers = query(goalUsersRef, orderByChild('goalIdentifier'), equalTo(childSnapshot2.val().goalsIdentifier));
-                                onValue(goalUsers, (snapshot3) => {
-                                    snapshot3.forEach((childSnapshot3) => {
-                                        if (childSnapshot3.val().userIdentifier === state.id) {
-                                            const goalVariables = {
-                                                completed: childSnapshot3.val().completed
-                                            };
-                                            const goalRef = ref(db, `goals/${childSnapshot3.val().goalIdentifier}/description`);
-                                            onValue(goalRef, (snapshot3) => {
-                                                goalVariables.description = snapshot3.val();
-                                                goalsList.push(goalVariables);
-                                            });
-                                        }
-                                    });
+                                const goalRef = ref(db, `goals/${childSnapshot2.val().goalsIdentifier}/description`);
+                                onValue(goalRef, (snapshot3) => {
+                                    goalsList.push(snapshot3.val());
                                 });
                             });
                         });
@@ -137,7 +125,7 @@ export default function ActiveChallenges({ user }) {
                                     {item.goals.map((goal, index) => {
                                         return (
                                             <Text key={goal}>
-                                                {goal.description}
+                                                {goal}
                                                 {index < item.goals.length - 1 ? ', ' : ''}
                                             </Text>
                                         );
