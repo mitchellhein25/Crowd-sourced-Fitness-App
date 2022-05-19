@@ -116,6 +116,7 @@ exports[`<App /> load renders correctly 1`] = `
                 allowFontScaling={true}
                 onChangeText={[Function]}
                 placeholder="Email"
+                placeholderTextColor="#8f8f8f"
                 rejectResponderTermination={true}
                 style={
                   Object {
@@ -147,6 +148,7 @@ exports[`<App /> load renders correctly 1`] = `
                 allowFontScaling={true}
                 onChangeText={[Function]}
                 placeholder="Password"
+                placeholderTextColor="#8f8f8f"
                 rejectResponderTermination={true}
                 style={
                   Object {

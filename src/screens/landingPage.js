@@ -9,7 +9,7 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
 import {
-    primaryColor, white, black
+    primaryColor, white, black, secondaryColorDarker
 } from '../utils/globalStyles';
 
 export default function LandingPage({ navigation }) {
@@ -97,6 +97,7 @@ export default function LandingPage({ navigation }) {
                     <TextInput
                         style={styles.textInput}
                         placeholder='Email'
+                        placeholderTextColor={secondaryColorDarker}
                         value={state.email}
                         onChangeText={(e) => handleChange(e, 'email')}
                     />
@@ -105,6 +106,7 @@ export default function LandingPage({ navigation }) {
                     <TextInput
                         style={styles.textInput}
                         placeholder='Password'
+                        placeholderTextColor={secondaryColorDarker}
                         value={state.password}
                         onChangeText={(e) => handleChange(e, 'password')}
                     />

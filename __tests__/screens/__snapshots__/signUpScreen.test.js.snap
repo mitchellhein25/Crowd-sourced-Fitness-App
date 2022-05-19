@@ -55,6 +55,7 @@ exports[`<SignUpScreen /> rendering renders correctly 1`] = `
         allowFontScaling={true}
         onChangeText={[Function]}
         placeholder="Email"
+        placeholderTextColor="#8f8f8f"
         rejectResponderTermination={true}
         style={
           Object {
@@ -86,6 +87,7 @@ exports[`<SignUpScreen /> rendering renders correctly 1`] = `
         allowFontScaling={true}
         onChangeText={[Function]}
         placeholder="First Name"
+        placeholderTextColor="#8f8f8f"
         rejectResponderTermination={true}
         style={
           Object {
@@ -117,6 +119,7 @@ exports[`<SignUpScreen /> rendering renders correctly 1`] = `
         allowFontScaling={true}
         onChangeText={[Function]}
         placeholder="Last Name"
+        placeholderTextColor="#8f8f8f"
         rejectResponderTermination={true}
         style={
           Object {
@@ -148,6 +151,7 @@ exports[`<SignUpScreen /> rendering renders correctly 1`] = `
         allowFontScaling={true}
         onChangeText={[Function]}
         placeholder="Password"
+        placeholderTextColor="#8f8f8f"
         rejectResponderTermination={true}
         style={
           Object {

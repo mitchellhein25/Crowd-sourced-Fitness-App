@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, FlatList, TouchableOpacity
+    StyleSheet, View, Text, FlatList, TouchableOpacity
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -76,15 +76,23 @@ export default function ActiveChallenges({ user }) {
                                 });
                             });
                         });
-                        challengesList.push({
-                            id: childSnapshot.key,
-                            description: childSnapshot.val().description,
-                            date: childSnapshot.val().date,
-                            type: childSnapshot.val().type,
-                            goals: goalsList,
-                            tags: tagsList,
-                            badges: badgesList,
+                        let alreadyInArray = false;
+                        challengesList.forEach((challenge) => {
+                            if (challenge.id === childSnapshot.key) {
+                                alreadyInArray = true;
+                            }
                         });
+                        if (alreadyInArray === false) {
+                            challengesList.push({
+                                id: childSnapshot.key,
+                                description: childSnapshot.val().description,
+                                date: childSnapshot.val().date,
+                                type: childSnapshot.val().type,
+                                goals: goalsList,
+                                tags: tagsList,
+                                badges: badgesList,
+                            });
+                        }
                     });
                 });
             });
@@ -113,7 +121,7 @@ export default function ActiveChallenges({ user }) {
                             <TouchableOpacity
                                 style={styles.listItemWrapper}
                                 key={item.id}
-                                onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id })}
+                                onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id, user })}
                             >
                                 <Text style={styles.description}>{item.description}</Text>
                                 <Text style={styles.item}>
@@ -151,11 +159,7 @@ export default function ActiveChallenges({ user }) {
                     />
                 ) : (
                     <TouchableOpacity onPress={() => setState({ ...state, showList: true })}>
-                        <Button
-                            title='Show Active Challenges'
-                            color={primaryColor}
-                            accessibilityLabel='See Active Challenges button'
-                        />
+                        <Text style={styles.button}>Show Active Challenges</Text>
                         <Ionicons name='arrow-down-outline' color={primaryColor} size={30} style={styles.icon} />
                     </TouchableOpacity>
                 )}
@@ -205,4 +209,7 @@ const styles = StyleSheet.create({
     icon: {
         alignSelf: 'center'
     },
+    button: {
+        color: primaryColor
+    }
 });

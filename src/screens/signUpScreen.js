@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import app from '../../firebase';
 import {
-    primaryColor, white, black, accentColor
+    primaryColor, white, black, accentColor, secondaryColorDarker
 } from '../utils/globalStyles';
 
 export default function SignUpScreen({ navigation }) {
@@ -121,6 +121,7 @@ export default function SignUpScreen({ navigation }) {
                             <TextInput
                                 style={styles.textInput}
                                 placeholder='Email'
+                                placeholderTextColor={secondaryColorDarker}
                                 value={state.email}
                                 onChangeText={(e) => handleChange(e, 'email')}
                             />
@@ -129,6 +130,7 @@ export default function SignUpScreen({ navigation }) {
                             <TextInput
                                 style={styles.textInput}
                                 placeholder='First Name'
+                                placeholderTextColor={secondaryColorDarker}
                                 value={state.firstName}
                                 onChangeText={(e) => handleChange(e, 'firstName')}
                             />
@@ -137,6 +139,7 @@ export default function SignUpScreen({ navigation }) {
                             <TextInput
                                 style={styles.textInput}
                                 placeholder='Last Name'
+                                placeholderTextColor={secondaryColorDarker}
                                 value={state.lastName}
                                 onChangeText={(e) => handleChange(e, 'lastName')}
                             />
@@ -145,6 +148,7 @@ export default function SignUpScreen({ navigation }) {
                             <TextInput
                                 style={styles.textInput}
                                 placeholder='Password'
+                                placeholderTextColor={secondaryColorDarker}
                                 value={state.password}
                                 onChangeText={(e) => handleChange(e, 'password')}
                             />

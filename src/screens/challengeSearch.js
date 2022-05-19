@@ -79,7 +79,7 @@ export default function ChallengeSearch({ user }) {
             ...state,
             list: getList()
         });
-    }, []);
+    }, [state.showList]);
 
     return (
         <View style={styles.container}>
@@ -103,7 +103,7 @@ export default function ChallengeSearch({ user }) {
                             <TouchableOpacity
                                 style={styles.listItemWrapper}
                                 key={item.id}
-                                onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id })}
+                                onPress={() => navigation.navigate('Challenge Detail', { challenge: item, userId: state.id, user })}
                             >
                                 <Text style={styles.description}>{item.description}</Text>
                                 <Text style={styles.item}>
@@ -140,12 +140,15 @@ export default function ChallengeSearch({ user }) {
                         )}
                     />
                 ) : (
-                    <TouchableOpacity onPress={() => setState({ ...state, showList: true })}>
-                        <Button
-                            title='Show Available Challenges'
-                            color={primaryColor}
-                            accessibilityLabel='See Available Challenges button'
-                        />
+                    <TouchableOpacity
+                        style={styles.loadButton}
+                        onPress={() => {
+                            setState({
+                                ...state, showList: true
+                            });
+                        }}
+                    >
+                        <Text style={styles.button}>Show Available Challenges</Text>
                         <Ionicons name='arrow-down-outline' color={primaryColor} size={30} style={styles.icon} />
                     </TouchableOpacity>
                 )}
@@ -201,4 +204,11 @@ const styles = StyleSheet.create({
     icon: {
         alignSelf: 'center'
     },
+    loadButton: {
+        flex: 1,
+        padding: 20
+    },
+    button: {
+        color: primaryColor
+    }
 });

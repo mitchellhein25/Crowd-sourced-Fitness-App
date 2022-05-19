@@ -5,34 +5,40 @@ import {
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
 } from 'firebase/database';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
-// import { useNavigation } from '@react-navigation/native';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
 import {
     white, black, red, green
 } from '../utils/globalStyles';
 
-export default function ChallengeDetail({ route }) {
-    // const navigation = useNavigation();
+export default function ChallengeDetail({ route, navigation }) {
     const [state, setState] = useState({
-        isActiveForUser: false
+        isActiveForUser: false,
     });
-    const { challenge, userId } = route.params ? route.params : {};
+    const { challenge, userId, user } = route.params ? route.params : {};
     const db = getDatabase(app);
 
     const getIfActive = async () => {
         const challengeUsersRef = ref(db, 'challengeUsers/');
         const challengeUserRecords = await get(query(challengeUsersRef, orderByChild('userIdentifier'), equalTo(userId)));
         const challengeUserRecordsJson = challengeUserRecords.toJSON();
-        Object.keys(challengeUserRecordsJson).forEach((key) => {
-            if (challengeUserRecordsJson[key].challengeIdentifier === challenge.id) {
-                setState({
-                    ...state,
-                    isActiveForUser: true
-                });
-            }
-        });
+        if (challengeUserRecordsJson != null) {
+            Object.keys(challengeUserRecordsJson).forEach((key) => {
+                if (challengeUserRecordsJson[key].challengeIdentifier === challenge.id) {
+                    setState({
+                        ...state,
+                        isActiveForUser: true
+                    });
+                }
+            });
+        }
+    };
+
+    const toChat = () => {
+
+        navigation.navigate('Chat Screen', { user, challenge });
     };
 
     const addToActive = () => {
@@ -67,6 +73,12 @@ export default function ChallengeDetail({ route }) {
 
     return (
         <View style={styles.container}>
+            <View style={styles.backButtonWrapper}>
+                <TouchableOpacity style={styles.row} onPress={() => navigation.goBack()}>
+                    <Ionicons name='arrow-back-outline' color={white} size={30} />
+                    <Text style={styles.backButtonText}>Go Back</Text>
+                </TouchableOpacity>
+            </View>
             <Text style={styles.description}>{challenge.description}</Text>
             <Text style={styles.item}>
                 <Text style={styles.bold}>Type:</Text>
@@ -108,6 +120,10 @@ export default function ChallengeDetail({ route }) {
                         <Text style={styles.detail} key={badge}>
                             {'\n'}
                             {challengeBadges.find((x) => x.id === badge).item}
+                            <Image
+                                style={styles.badgeImage}
+                                source={challengeBadges.find((x) => x.id === badge).image}
+                            />
                         </Text>
                     );
                 })}
@@ -125,9 +141,11 @@ export default function ChallengeDetail({ route }) {
             </Text>
             {state.isActiveForUser
                 ? (
-                    <Text style={styles.item}>
-                        You are actively participating in this challenge!
-                    </Text>
+                    <View style={styles.activeRow}>
+                        <Text style={styles.active}>
+                            You are actively participating in this challenge!
+                        </Text>
+                    </View>
                 )
                 : (
                     <View style={styles.buttonWrapper}>
@@ -139,6 +157,17 @@ export default function ChallengeDetail({ route }) {
                         />
                     </View>
                 )}
+            {state.isActiveForUser
+                ? (
+                    <View style={styles.buttonWrapper}>
+                        <TouchableOpacity style={styles.row} onPress={() => { toChat(); }}>
+                            <Ionicons name='chatbubble-ellipses-outline' color={white} size={30} />
+                            <Text style={styles.buttonText}>Chat</Text>
+                        </TouchableOpacity>
+                    </View>
+                )
+                : null}
+
         </View>
     );
 }
