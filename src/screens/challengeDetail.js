@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, Pressable
+    StyleSheet, View, Text, Button, Pressable, TouchableOpacity, Image
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
