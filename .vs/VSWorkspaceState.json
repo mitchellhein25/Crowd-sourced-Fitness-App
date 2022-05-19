@@ -4,9 +4,8 @@
     "\\assets",
     "\\src",
     "\\src\\screens",
-    "\\src\\utils",
-    "\\__tests__",
-    "\\__tests__\\screens"
+    "\\src\\utils"
   ],
+  "SelectedNode": "\\src\\screens\\challengeSearch.js",
   "PreviewInSolutionExplorer": false
 }
