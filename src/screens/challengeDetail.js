@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, Image, TouchableOpacity
+    StyleSheet, View, Text, Button, Image, TouchableOpacity, ScrollView
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
@@ -61,7 +61,9 @@ export default function ChallengeDetail({ route, navigation }) {
 
     return (
         <View style={styles.container}>
+        <ScrollView>
             <View style={styles.backButtonWrapper}>
+
                 <TouchableOpacity style={styles.row} onPress={() => navigation.goBack()}>
                     <Ionicons name='arrow-back-outline' color={white} size={30} />
                     <Text style={styles.backButtonText}>Go Back</Text>
@@ -140,7 +142,7 @@ export default function ChallengeDetail({ route, navigation }) {
                     </View>
                 )
                 : null}
-
+        </ScrollView>
         </View>
     );
 }
