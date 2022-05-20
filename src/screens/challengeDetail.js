@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, Image, TouchableOpacity
+    StyleSheet, View, Text, Button, Image, TouchableOpacity, Pressable
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
@@ -9,7 +9,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
-import { white, black, primaryColor } from '../utils/globalStyles';
+import {
+    white, black, primaryColor, green, red
+} from '../utils/globalStyles';
 
 export default function ChallengeDetail({ route, navigation }) {
     const [state, setState] = useState({
@@ -55,6 +57,16 @@ export default function ChallengeDetail({ route, navigation }) {
         }
     };
 
+    const getCompletedGoals = (challengeGoals) => {
+        let goalsCompleted = 0;
+        for (let i = 0; i < challengeGoals.length; i += 1) {
+            if (challengeGoals[i].completed === true) {
+                goalsCompleted += 1;
+            }
+        }
+        return goalsCompleted;
+    };
+
     useEffect(() => {
         getIfActive();
     }, []);
@@ -76,12 +88,27 @@ export default function ChallengeDetail({ route, navigation }) {
                 </Text>
             </Text>
             <Text style={styles.item}>
-                <Text style={styles.bold}>Goals:</Text>
+                <Text style={styles.bold}>Goals</Text>
+                {'\n'}
+                <Text style={styles.completedGoals}>
+                    Completed:
+                    { getCompletedGoals(challenge.goals) }
+                    /
+                    { challenge.goals.length }
+                </Text>
                 {challenge.goals.map((goal) => {
                     return (
                         <Text style={styles.detail} key={goal}>
                             {'\n'}
-                            {goal}
+                            {goal.description}
+                            <Pressable style={styles.markGoalCompletePressable}>
+                                <Text style={(goal.completed === true)
+                                    ? styles.completeButton2
+                                    : styles.completeButton1}
+                                >
+                                    Complete
+                                </Text>
+                            </Pressable>
                         </Text>
                     );
                 })}
@@ -161,7 +188,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     item: {
-        fontSize: 25,
+        fontSize: 20,
         textAlign: 'left',
         alignItems: 'flex-start',
         marginTop: 20,
@@ -223,4 +250,15 @@ const styles = StyleSheet.create({
         width: '50%',
         alignSelf: 'center',
     },
+    completeButton1: {
+        color: red,
+        fontSize: 18
+    },
+    completeButton2: {
+        color: green,
+        fontSize: 18
+    },
+    completedGoals: {
+        fontSize: 20
+    }
 });
