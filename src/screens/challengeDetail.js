@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, Pressable, TouchableOpacity, Image
+    StyleSheet, View, Text, Button, Image, TouchableOpacity, Pressable
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push
@@ -9,9 +9,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
-import {
-    white, black, red, green
-} from '../utils/globalStyles';
+import { white, black, primaryColor, green, red } from '../utils/globalStyles';
 
 export default function ChallengeDetail({ route, navigation }) {
     const [state, setState] = useState({
@@ -197,6 +195,58 @@ const styles = StyleSheet.create({
     },
     detail: {
         fontSize: 22,
+    },
+    buttonWrapper: {
+        width: 150,
+        alignSelf: 'center',
+        marginTop: 20,
+        borderWidth: 1,
+        borderRadius: 30,
+        padding: 8,
+        alignItems: 'center',
+        backgroundColor: black
+    },
+    backButtonWrapper: {
+        margin: 5,
+        width: 150,
+        backgroundColor: black,
+        borderRadius: 30,
+        alignSelf: 'center',
+        padding: 8,
+        alignItems: 'center'
+    },
+    badgeImage: {
+        height: 50,
+        width: 50
+    },
+    buttonText: {
+        fontSize: 20,
+        alignSelf: 'center',
+        paddingLeft: 10,
+        color: white
+    },
+    backButtonText: {
+        fontSize: 20,
+        alignSelf: 'center',
+        color: white,
+        paddingLeft: 10
+    },
+    row: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    active: {
+        fontSize: 18,
+        color: primaryColor,
+        marginTop: 15,
+        width: '100%',
+        textAlign: 'center'
+    },
+    activeRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '50%',
+        alignSelf: 'center',
     },
     completeButton1: {
         color: red,
