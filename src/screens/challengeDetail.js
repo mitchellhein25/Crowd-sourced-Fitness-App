@@ -68,7 +68,7 @@ export default function ChallengeDetail({ route, navigation }) {
                         <Ionicons name='arrow-back-outline' color={white} size={30} />
                         <Text style={styles.backButtonText}>Go Back</Text>
                     </TouchableOpacity>
-            </View>
+                </View>
                 <Text style={styles.description}>{challenge.description}</Text>
                 <Text style={styles.item}>
                     <Text style={styles.bold}>Type:</Text>
