@@ -110,10 +110,6 @@ export default function ChallengeSearch({ user }) {
                                     <Text style={styles.bold}>Type:&nbsp;</Text>
                                     {challengeTypes.find((x) => x.id === item.type).item}
                                 </Text>
-                                {/* <Text style={styles.item}> */}
-                                {/*    Created: */}
-                                {/*    {item.date} */}
-                                {/* </Text> */}
                                 <Text style={styles.item}>
                                     <Text style={styles.bold}>Goals:&nbsp;</Text>
                                     {item.goals.map((goal, index) => {

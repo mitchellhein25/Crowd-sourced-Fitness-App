@@ -9,7 +9,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
 import { challengeTypes } from '../utils/challengeTypes';
 import { challengeBadges } from '../utils/challengeBadges';
-import { white, black, primaryColor, green, red } from '../utils/globalStyles';
+import {
+    white, black, primaryColor, green, red
+} from '../utils/globalStyles';
 
 export default function ChallengeDetail({ route, navigation }) {
     const [state, setState] = useState({
