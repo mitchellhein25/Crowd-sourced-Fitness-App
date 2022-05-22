@@ -27,6 +27,13 @@ export default function ChallengeSearch({ user }) {
         const list = [];
         onValue(challenge, (snapshot) => {
             snapshot.forEach((childSnapshot) => {
+                const goalUsersRef = ref(db, 'goalUsers/');
+                // Get if the user is active in the challenge
+                const challengeUsersRef = ref(db, 'challengeUsers/');
+                const challengeUserRecords = query(challengeUsersRef, orderByChild('userIdentifier'), equalTo(state.id));
+                const challengeUserRecordsJson = challengeUserRecords.toJSON();
+
+                // Get the goals for the challenge
                 const challengeGoalsRef = ref(db, 'challengeGoals/');
                 const challengeGoals = query(challengeGoalsRef, orderByChild('challengeIdentifier'), equalTo(childSnapshot.key));
                 const goalsList = [];
@@ -34,7 +41,22 @@ export default function ChallengeSearch({ user }) {
                     snapshot2.forEach((childSnapshot2) => {
                         const goalRef = ref(db, `goals/${childSnapshot2.val().goalsIdentifier}/description`);
                         onValue(goalRef, (snapshot3) => {
-                            goalsList.push(snapshot3.val());
+                            const goalDesc = snapshot3.val();
+                            const goalId = childSnapshot2.val().goalsIdentifier;
+                            let completed = false;
+
+                            // If the user is in the challenge, get if they have completed the goals
+                            if (challengeUserRecordsJson != null) {
+                                const goalUser = query(goalUsersRef, orderByChild('goalIdentifier'), equalTo(childSnapshot2.val().goalsIdentifier));
+                                onValue(goalUser, (snapshotGoal) => {
+                                    snapshotGoal.forEach((childSnapshotGoal) => {
+                                        if (childSnapshotGoal.val().userIdentifier === state.id) {
+                                            completed = childSnapshotGoal.val().completed;
+                                        }
+                                    });
+                                });
+                            }
+                            goalsList.push([goalDesc, completed, goalId]);
                         });
                     });
                 });
@@ -75,9 +97,11 @@ export default function ChallengeSearch({ user }) {
     };
 
     useEffect(() => {
-        setState({
-            ...state,
-            list: getList()
+        navigation.addListener('focus', () => {
+            setState({
+                ...state,
+                list: getList()
+            });
         });
     }, [state.showList]);
 
@@ -114,8 +138,8 @@ export default function ChallengeSearch({ user }) {
                                     <Text style={styles.bold}>Goals:&nbsp;</Text>
                                     {item.goals.map((goal, index) => {
                                         return (
-                                            <Text key={goal}>
-                                                {goal}
+                                            <Text key={goal[2]}>
+                                                {goal[0]}
                                                 {index < item.goals.length - 1 ? ', ' : ''}
                                             </Text>
                                         );

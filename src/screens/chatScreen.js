@@ -4,14 +4,10 @@ import React, {
 import {
     StyleSheet, View, Text, TextInput, TouchableOpacity
 } from 'react-native';
-// import {
-//    getStorage, ref as refStorage, getDownloadURL
-// } from 'firebase/storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {
     getDatabase, ref, onValue, query, orderByChild, push
 } from 'firebase/database';
-// import { Avatar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import {
     white, black, accentColor, secondaryColorDarker, secondaryColorLighter
@@ -20,34 +16,12 @@ import app from '../../firebase';
 
 export default function Chat({ route }) {
     const { user, challenge } = route.params ? route.params : {};
-    // console.log(user);
-    // console.log(Object.keys(user)[0]);
     const userObject = Object.values(user)[0];
     const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState();
-    // const [profilePic, setProfilePic] = useState();
-
-    // Retrieve profile pic from Firestore
-    // function getProfileImage(imagePath) {
-    //    const storage = getStorage(app);
-    //    return getDownloadURL(refStorage(storage, imagePath))
-    //        .then((url) => {
-    //            return url;
-    //        })
-    //        .catch((error) => {
-    //            console.log(error);
-    //        });
-    // }
 
     useEffect(() => {
-        // async function getImage() {
-        //    if (user) {
-        //        const profileImagePath = await getProfileImage(Object.values(user)[0].profilePic);
-        //        setProfilePic(profileImagePath);
-        //    }
-        // }
-        // getImage();
 
         const db = getDatabase(app);
         const messagesRef = ref(db, 'messages/');
@@ -65,7 +39,11 @@ export default function Chat({ route }) {
 
         });
     }, []);
+
     const onSend = () => {
+        if (!content) {
+            return;
+        }
         const date = new Date();
         const formattedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}Z`;
         const db = getDatabase(app);

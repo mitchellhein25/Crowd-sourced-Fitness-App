@@ -3,7 +3,7 @@ import {
     StyleSheet, View, Text, Button, Image, TouchableOpacity, Pressable
 } from 'react-native';
 import {
-    getDatabase, ref, get, equalTo, query, orderByChild, push
+    getDatabase, ref, get, equalTo, query, orderByChild, push, onValue, update
 } from 'firebase/database';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import app from '../../firebase';
@@ -16,10 +16,11 @@ import {
 export default function ChallengeDetail({ route, navigation }) {
     const [state, setState] = useState({
         isActiveForUser: false,
+        goalsCompleted: 0,
+
     });
     const { challenge, userId, user } = route.params ? route.params : {};
     const db = getDatabase(app);
-
     const getIfActive = async () => {
         const challengeUsersRef = ref(db, 'challengeUsers/');
         const challengeUserRecords = await get(query(challengeUsersRef, orderByChild('userIdentifier'), equalTo(userId)));
@@ -48,6 +49,14 @@ export default function ChallengeDetail({ route, navigation }) {
                 challengeIdentifier: challenge.id,
                 userIdentifier: userId
             });
+            const goalUsersRef = ref(db, 'goalUsers/');
+            challenge.goals.forEach((goal) => {
+                push(goalUsersRef, {
+                    completed: false,
+                    goalIdentifier: goal[2],
+                    userIdentifier: userId
+                });
+            });
             setState({
                 ...state,
                 isActiveForUser: true
@@ -60,11 +69,33 @@ export default function ChallengeDetail({ route, navigation }) {
     const getCompletedGoals = (challengeGoals) => {
         let goalsCompleted = 0;
         for (let i = 0; i < challengeGoals.length; i += 1) {
-            if (challengeGoals[i].completed === true) {
+            if (challengeGoals[i][1] === true) {
                 goalsCompleted += 1;
             }
         }
         return goalsCompleted;
+    };
+
+    const markCompleted = (goal) => {
+        if (goal[1] === true) {
+            return;
+        }
+        const goalUsersRef = ref(db, 'goalUsers/');
+        const goals = query(goalUsersRef, orderByChild('goalIdentifier'), equalTo(goal[2]));
+        onValue(goals, (snapshotGoal) => {
+            snapshotGoal.forEach((childSnapshotGoal) => {
+                if (childSnapshotGoal.val().userIdentifier === userId) {
+                    if (childSnapshotGoal.key !== 'undefined') {
+                        const goalUser = ref(db, `goalUsers/${childSnapshotGoal.key}/`);
+                        update(goalUser, {
+                            userIdentifier: childSnapshotGoal.val().userIdentifier,
+                            goalIdentifier: childSnapshotGoal.val().goalIdentifier,
+                            completed: true,
+                        });
+                    }
+                }
+            });
+        });
     };
 
     useEffect(() => {
@@ -92,21 +123,26 @@ export default function ChallengeDetail({ route, navigation }) {
                 {'\n'}
                 <Text style={styles.completedGoals}>
                     Completed:
-                    { getCompletedGoals(challenge.goals) }
+                    {getCompletedGoals(challenge.goals) }
                     /
-                    { challenge.goals.length }
+                    {challenge.goals.length }
                 </Text>
                 {challenge.goals.map((goal) => {
                     return (
-                        <Text style={styles.detail} key={goal}>
+                        <Text style={styles.detail} key={goal[2]}>
                             {'\n'}
-                            {goal.description}
-                            <Pressable style={styles.markGoalCompletePressable}>
-                                <Text style={(goal.completed === true)
+                            {goal[0]}
+                            <Pressable
+                                style={styles.markGoalCompletePressable}
+                                onPress={() => markCompleted(goal)}
+                            >
+                                <Text style={(goal[1] === true)
                                     ? styles.completeButton2
                                     : styles.completeButton1}
                                 >
-                                    Complete
+                                    {(goal[1] === true)
+                                        ? 'Completed'
+                                        : 'Complete'}
                                 </Text>
                             </Pressable>
                         </Text>
@@ -148,10 +184,10 @@ export default function ChallengeDetail({ route, navigation }) {
                     </View>
                 )
                 : (
-                    <View style={styles.buttonWrapper}>
+                    <View style={styles.joinButtonWrapper}>
                         <Button
                             title='Join this Challenge'
-                            color={black}
+                            color={white}
                             accessibilityLabel='Join this Challenge button'
                             onPress={() => { addToActive(); }}
                         />
@@ -200,6 +236,16 @@ const styles = StyleSheet.create({
     },
     buttonWrapper: {
         width: 150,
+        alignSelf: 'center',
+        marginTop: 20,
+        borderWidth: 1,
+        borderRadius: 30,
+        padding: 8,
+        alignItems: 'center',
+        backgroundColor: black
+    },
+    joinButtonWrapper: {
+        width: 200,
         alignSelf: 'center',
         marginTop: 20,
         borderWidth: 1,

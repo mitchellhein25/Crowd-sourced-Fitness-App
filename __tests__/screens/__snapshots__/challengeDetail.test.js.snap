@@ -222,7 +222,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
         "borderWidth": 1,
         "marginTop": 20,
         "padding": 8,
-        "width": 150,
+        "width": 200,
       }
     }
   >
@@ -262,7 +262,7 @@ exports[`<ChallengeDetail /> load renders correctly 1`] = `
                 "textAlign": "center",
               },
               Object {
-                "color": "black",
+                "color": "white",
               },
             ]
           }
