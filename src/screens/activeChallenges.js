@@ -31,25 +31,27 @@ export default function ActiveChallenges({ user }) {
                 const challenges = query(challengesRef, orderByKey(), equalTo(challengeIdentifier));
                 onValue(challenges, (snapshot) => {
                     snapshot.forEach((childSnapshot) => {
+                        const goalUsersRef = ref(db, 'goalUsers/');
                         const challengeGoalsRef = ref(db, 'challengeGoals/');
                         const challengeGoals = query(challengeGoalsRef, orderByChild('challengeIdentifier'), equalTo(childSnapshot.key));
                         const goalsList = [];
                         onValue(challengeGoals, (snapshot2) => {
                             snapshot2.forEach((childSnapshot2) => {
-                                const goalUsersRef = ref(db, 'goalUsers/');
-                                const goalUsers = query(goalUsersRef, orderByChild('goalIdentifier'), equalTo(childSnapshot2.val().goalsIdentifier));
-                                onValue(goalUsers, (snapshot3) => {
-                                    snapshot3.forEach((childSnapshot3) => {
-                                        if (childSnapshot3.val().userIdentifier === state.id) {
-                                            const goalVariables = {
-                                                completed: childSnapshot3.val().completed
-                                            };
-                                            const goalRef = ref(db, `goals/${childSnapshot3.val().goalIdentifier}/description`);
-                                            onValue(goalRef, (snapshot3) => {
-                                                goalVariables.description = snapshot3.val();
-                                                goalsList.push(goalVariables);
-                                            });
-                                        }
+                                const goalRef = ref(db, `goals/${childSnapshot2.val().goalsIdentifier}/description`);
+                                onValue(goalRef, (snapshot3) => {
+                                    const goalDesc = snapshot3.val();
+                                    const goalId = childSnapshot2.val().goalsIdentifier;
+                                    const goalUser = query(goalUsersRef, orderByChild('goalIdentifier'), equalTo(childSnapshot2.val().goalsIdentifier));
+                                    onValue(goalUser, (snapshotGoal) => {
+                                        snapshotGoal.forEach((childSnapshotGoal) => {
+                                            if (childSnapshotGoal.val().userIdentifier
+                                                === state.id) {
+                                                const completed = childSnapshotGoal.val().completed;
+                                                if (childSnapshotGoal.key !== 'undefined') {
+                                                    goalsList.push([goalDesc, completed, goalId]);
+                                                }
+                                            }
+                                        });
                                     });
                                 });
                             });
@@ -101,11 +103,13 @@ export default function ActiveChallenges({ user }) {
     };
 
     useEffect(() => {
-        setState({
-            ...state,
-            list: getList()
+        navigation.addListener('focus', () => {
+            setState({
+                ...state,
+                list: getList()
+            });
         });
-    }, []);
+    }, [state.showList]);
 
     return (
         <View style={styles.container}>
@@ -136,8 +140,8 @@ export default function ActiveChallenges({ user }) {
                                     <Text style={styles.bold}>Goals:&nbsp;</Text>
                                     {item.goals.map((goal, index) => {
                                         return (
-                                            <Text key={goal}>
-                                                {goal.description}
+                                            <Text key={goal[2]}>
+                                                {goal[0]}
                                                 {index < item.goals.length - 1 ? ', ' : ''}
                                             </Text>
                                         );
