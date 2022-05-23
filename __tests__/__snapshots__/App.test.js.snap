@@ -83,7 +83,7 @@ exports[`<App /> load renders correctly 1`] = `
             <Text
               style={
                 Object {
-                  "fontSize": 40,
+                  "fontSize": 67,
                 }
               }
             >

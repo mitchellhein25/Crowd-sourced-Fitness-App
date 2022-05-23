@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
         marginBottom: 100
     },
     headerText: {
-        fontSize: 40
+        fontSize: 67
     },
     inputFormContainer: {
         flex: 1,
