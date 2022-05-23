@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { RFPercentage } from 'react-native-responsive-fontsize';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild
 } from 'firebase/database';
