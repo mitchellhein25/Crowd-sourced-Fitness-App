@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Button, Image, TouchableOpacity, Pressable
+    StyleSheet, View, Text, Button, Image, TouchableOpacity, Pressable, ScrollView
 } from 'react-native';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild, push, onValue, update
@@ -104,106 +104,107 @@ export default function ChallengeDetail({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.backButtonWrapper}>
-                <TouchableOpacity style={styles.row} onPress={() => navigation.goBack()}>
-                    <Ionicons name='arrow-back-outline' color={white} size={30} />
-                    <Text style={styles.backButtonText}>Go Back</Text>
-                </TouchableOpacity>
-            </View>
-            <Text style={styles.description}>{challenge.description}</Text>
-            <Text style={styles.item}>
-                <Text style={styles.bold}>Type:</Text>
-                <Text style={styles.detail}>
+        <ScrollView>
+                <View style={styles.backButtonWrapper}>
+                    <TouchableOpacity style={styles.row} onPress={() => navigation.goBack()}>
+                        <Ionicons name='arrow-back-outline' color={white} size={30} />
+                        <Text style={styles.backButtonText}>Go Back</Text>
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.description}>{challenge.description}</Text>
+                <Text style={styles.item}>
+                    <Text style={styles.bold}>Type:</Text>
+                    <Text style={styles.detail}>
+                        {'\n'}
+                        {challengeTypes.find((x) => x.id === challenge.type).item}
+                    </Text>
+                </Text>
+                <Text style={styles.item}>
+                    <Text style={styles.bold}>Goals</Text>
                     {'\n'}
-                    {challengeTypes.find((x) => x.id === challenge.type).item}
-                </Text>
-            </Text>
-            <Text style={styles.item}>
-                <Text style={styles.bold}>Goals</Text>
-                {'\n'}
-                <Text style={styles.completedGoals}>
-                    Completed:
-                    {getCompletedGoals(challenge.goals) }
-                    /
-                    {challenge.goals.length }
-                </Text>
-                {challenge.goals.map((goal) => {
-                    return (
-                        <Text style={styles.detail} key={goal[2]}>
-                            {'\n'}
-                            {goal[0]}
-                            <Pressable
-                                style={styles.markGoalCompletePressable}
-                                onPress={() => markCompleted(goal)}
-                            >
-                                <Text style={(goal[1] === true)
-                                    ? styles.completeButton2
-                                    : styles.completeButton1}
+                    <Text style={styles.completedGoals}>
+                        Completed:
+                        {getCompletedGoals(challenge.goals) }
+                        /
+                        {challenge.goals.length }
+                    </Text>
+                    {challenge.goals.map((goal) => {
+                        return (
+                            <Text style={styles.detail} key={goal[2]}>
+                                {'\n'}
+                                {goal[0]}
+                                <Pressable
+                                    style={styles.markGoalCompletePressable}
+                                    onPress={() => markCompleted(goal)}
                                 >
-                                    {(goal[1] === true)
-                                        ? 'Completed'
-                                        : 'Complete'}
-                                </Text>
-                            </Pressable>
-                        </Text>
-                    );
-                })}
-            </Text>
-            <Text style={styles.item}>
-                <Text style={styles.bold}>Badges:</Text>
-                {challenge.badges.map((badge) => {
-                    return (
-                        <Text style={styles.detail} key={badge}>
-                            {'\n'}
-                            {challengeBadges.find((x) => x.id === badge).item}
-                            <Image
-                                style={styles.badgeImage}
-                                source={challengeBadges.find((x) => x.id === badge).image}
+                                    <Text style={(goal[1] === true)
+                                        ? styles.completeButton2
+                                        : styles.completeButton1}
+                                    >
+                                        {(goal[1] === true)
+                                            ? 'Completed'
+                                            : 'Complete'}
+                                    </Text>
+                                </Pressable>
+                            </Text>
+                        );
+                    })}
+                </Text>
+                <Text style={styles.item}>
+                    <Text style={styles.bold}>Badges:</Text>
+                    {challenge.badges.map((badge) => {
+                        return (
+                            <Text style={styles.detail} key={badge}>
+                                {'\n'}
+                                {challengeBadges.find((x) => x.id === badge).item}
+                                <Image
+                                    style={styles.badgeImage}
+                                    source={challengeBadges.find((x) => x.id === badge).image}
+                                />
+                            </Text>
+                        );
+                    })}
+                </Text>
+                <Text style={styles.item}>
+                    <Text style={styles.bold}>Tags:</Text>
+                    {challenge.tags.map((tag) => {
+                        return (
+                            <Text style={styles.detail} key={tag}>
+                                {'\n'}
+                                {tag}
+                            </Text>
+                        );
+                    })}
+                </Text>
+                {state.isActiveForUser
+                    ? (
+                        <View style={styles.activeRow}>
+                            <Text style={styles.active}>
+                                You are actively participating in this challenge!
+                            </Text>
+                        </View>
+                    )
+                    : (
+                        <View style={styles.joinButtonWrapper}>
+                            <Button
+                                title='Join this Challenge'
+                                color={white}
+                                accessibilityLabel='Join this Challenge button'
+                                onPress={() => { addToActive(); }}
                             />
-                        </Text>
-                    );
-                })}
-            </Text>
-            <Text style={styles.item}>
-                <Text style={styles.bold}>Tags:</Text>
-                {challenge.tags.map((tag) => {
-                    return (
-                        <Text style={styles.detail} key={tag}>
-                            {'\n'}
-                            {tag}
-                        </Text>
-                    );
-                })}
-            </Text>
-            {state.isActiveForUser
-                ? (
-                    <View style={styles.activeRow}>
-                        <Text style={styles.active}>
-                            You are actively participating in this challenge!
-                        </Text>
-                    </View>
-                )
-                : (
-                    <View style={styles.joinButtonWrapper}>
-                        <Button
-                            title='Join this Challenge'
-                            color={white}
-                            accessibilityLabel='Join this Challenge button'
-                            onPress={() => { addToActive(); }}
-                        />
-                    </View>
-                )}
-            {state.isActiveForUser
-                ? (
-                    <View style={styles.buttonWrapper}>
-                        <TouchableOpacity style={styles.row} onPress={() => { toChat(); }}>
-                            <Ionicons name='chatbubble-ellipses-outline' color={white} size={30} />
-                            <Text style={styles.buttonText}>Chat</Text>
-                        </TouchableOpacity>
-                    </View>
-                )
-                : null}
-
+                        </View>
+                    )}
+                {state.isActiveForUser
+                    ? (
+                        <View style={styles.buttonWrapper}>
+                            <TouchableOpacity style={styles.row} onPress={() => { toChat(); }}>
+                                <Ionicons name='chatbubble-ellipses-outline' color={white} size={30} />
+                                <Text style={styles.buttonText}>Chat</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                    : null}
+        </ScrollView>
         </View>
     );
 }
