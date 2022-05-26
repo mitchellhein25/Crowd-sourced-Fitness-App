@@ -14,12 +14,14 @@ import {
 } from '../utils/globalStyles';
 
 export default function ChallengeDetail({ route, navigation }) {
+    const { challenge, userId, user } = route.params ? route.params : {};
     const [state, setState] = useState({
         isActiveForUser: false,
         goalsCompleted: 0,
-
+        goalsList: challenge.goals,
+        pressed: false
     });
-    const { challenge, userId, user } = route.params ? route.params : {};
+    state.goalsList.sort();
     const db = getDatabase(app);
     const getIfActive = async () => {
         const challengeUsersRef = ref(db, 'challengeUsers/');
@@ -80,6 +82,12 @@ export default function ChallengeDetail({ route, navigation }) {
         if (goal[1] === true) {
             return;
         }
+        setState({
+            ...state,
+            pressed: true
+        });
+        removeGoal(goal);
+        state.goalsList.sort();
         const goalUsersRef = ref(db, 'goalUsers/');
         const goals = query(goalUsersRef, orderByChild('goalIdentifier'), equalTo(goal[2]));
         onValue(goals, (snapshotGoal) => {
@@ -95,6 +103,16 @@ export default function ChallengeDetail({ route, navigation }) {
                     }
                 }
             });
+        });
+    };
+
+    const removeGoal = (goal) => {
+        const a = state.goalsList;
+        const index = a.indexOf(goal);
+        a.splice(index, 1);
+        setState({
+            ...state,
+            goalsList: a
         });
     };
 
@@ -123,11 +141,11 @@ export default function ChallengeDetail({ route, navigation }) {
                 {'\n'}
                 <Text style={styles.completedGoals}>
                     Completed:
-                    {getCompletedGoals(challenge.goals) }
+                    {getCompletedGoals(challenge.goals)}
                     /
-                    {challenge.goals.length }
+                    {challenge.goals.length}
                 </Text>
-                {challenge.goals.map((goal) => {
+                {state.goalsList.map((goal) => {
                     return (
                         <Text style={styles.detail} key={goal[2]}>
                             {'\n'}

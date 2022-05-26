@@ -80,13 +80,7 @@ exports[`<App /> load renders correctly 1`] = `
           <View
             style={Object {}}
           >
-            <Text
-              style={
-                Object {
-                  "fontSize": 67,
-                }
-              }
-            >
+            <Text>
               Fitness Challenge App
             </Text>
             <Text />

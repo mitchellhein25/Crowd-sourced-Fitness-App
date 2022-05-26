@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RFPercentage } from 'react-native-responsive-fontsize';
+// import { RFPercentage } from 'react-native-responsive-fontsize';
 import {
     getDatabase, ref, get, equalTo, query, orderByChild
 } from 'firebase/database';
@@ -163,9 +163,9 @@ const styles = StyleSheet.create({
     headerWrapper: {
         // marginBottom: 100
     },
-    headerText: {
-        fontSize: RFPercentage(5)
-    },
+    // headerText: {
+    //     fontSize: RFPercentage(5)
+    // },
     icon: {
         alignSelf: 'center'
     },
