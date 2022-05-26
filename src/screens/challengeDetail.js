@@ -123,21 +123,21 @@ export default function ChallengeDetail({ route, navigation }) {
     return (
         <View style={styles.container}>
             <ScrollView>
-            <View style={styles.backButtonWrapper}>
+                <View style={styles.backButtonWrapper}>
                     <TouchableOpacity style={styles.row} onPress={() => navigation.goBack()}>
                         <Ionicons name='arrow-back-outline' color={white} size={30} />
                         <Text style={styles.backButtonText}>Go Back</Text>
                     </TouchableOpacity>
                 </View>
-            <Text style={styles.description}>{challenge.description}</Text>
-            <Text style={styles.item}>
+                <Text style={styles.description}>{challenge.description}</Text>
+                <Text style={styles.item}>
                     <Text style={styles.bold}>Type:</Text>
                     <Text style={styles.detail}>
                         {'\n'}
                         {challengeTypes.find((x) => x.id === challenge.type).item}
                     </Text>
                 </Text>
-            <Text style={styles.item}>
+                <Text style={styles.item}>
                     <Text style={styles.bold}>Goals</Text>
                     {'\n'}
                     <Text style={styles.completedGoals}>
@@ -168,7 +168,7 @@ export default function ChallengeDetail({ route, navigation }) {
                         );
                     })}
                 </Text>
-            <Text style={styles.item}>
+                <Text style={styles.item}>
                     <Text style={styles.bold}>Badges:</Text>
                     {challenge.badges.map((badge) => {
                         return (
@@ -183,7 +183,7 @@ export default function ChallengeDetail({ route, navigation }) {
                         );
                     })}
                 </Text>
-            <Text style={styles.item}>
+                <Text style={styles.item}>
                     <Text style={styles.bold}>Tags:</Text>
                     {challenge.tags.map((tag) => {
                         return (
@@ -194,7 +194,7 @@ export default function ChallengeDetail({ route, navigation }) {
                         );
                     })}
                 </Text>
-            {state.isActiveForUser
+                {state.isActiveForUser
                     ? (
                         <View style={styles.activeRow}>
                             <Text style={styles.active}>
@@ -212,7 +212,7 @@ export default function ChallengeDetail({ route, navigation }) {
                             />
                         </View>
                     )}
-            {state.isActiveForUser
+                {state.isActiveForUser
                     ? (
                         <View style={styles.buttonWrapper}>
                             <TouchableOpacity style={styles.row} onPress={() => { toChat(); }}>
