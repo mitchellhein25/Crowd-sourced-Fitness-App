@@ -163,9 +163,9 @@ const styles = StyleSheet.create({
     headerWrapper: {
         // marginBottom: 100
     },
-    // headerText: {
-    //     fontSize: RFPercentage(5)
-    // },
+    headerText: {
+        fontSize: 40
+    },
     icon: {
         alignSelf: 'center'
     },
